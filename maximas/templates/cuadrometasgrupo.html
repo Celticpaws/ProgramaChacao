@@ -43,13 +43,14 @@
 	================================================== -->
 <section id="about" class="parallax section" style="background-image: url(http://themepush.com/demo/runcharity//static/img/1.jpg);">
 <div class="wrapsection">
-	<div class="parallax-overlay" style="background-color: #612599;opacity:0.9;"></div>
+	<div class="parallax-overlay" style="background-color: #612599;opacity:0.7;"></div>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<!-- Title -->
 				<div class="maintitle">
 					<h3 class="section-title"><strong>CUADRO DE META <span class="lighter">GRUPO SCOUT</span></strong> {{grupo}}</h3>
+					<br>
 				</div>
 			</div>
 			<div class="col-md-4 col-sm-6">
@@ -80,17 +81,31 @@
 			{%for u in unidades%}
 			<div class="col-md-4 col-sm-6">
 				<div class="service-box wow flipInY" data-wow-duration="1.5s" data-wow-delay="0.1s">
-					{% if u.0.unidad == "Manada Masculina" or u.0.unidad == "Manada Femenina" %}
+					{% if u.0.unidad == "Manada Masculina"%}
 					<button type="button" class="btn btn-info btn-md"><a class="manada" href="{{u.1}}">
 					<span class="fa fa-paw" style="font-size:7em"></span>
-					{% elif u.0.unidad == "Tropa Masculina" or u.0.unidad == "Tropa Femenina" %}
+					<h4> Manada <br> Masculina </h4>
+					{% elif u.0.unidad == "Manada Femenina" %}
+					<button type="button" class="btn btn-info btn-md"><a class="manada" href="{{u.1}}">
+					<span class="fa fa-paw" style="font-size:7em"></span>
+					<h4> Manada <br> Femenina </h4>
+					{% elif u.0.unidad == "Tropa Masculina" %}
 					<button type="button" class="btn btn-info btn-md"><a class="tropa" href="{{u.1}}">
 					<span class="fa fa-tree" style="font-size:7em"></span>
-					{% elif u.0.unidad == "Clan Masculino" or u.0.unidad == "Clan Femenino" %}
+					<h4> Tropa <br> Masculina </h4>
+					{% elif u.0.unidad == "Tropa Femenina" %}
+					<button type="button" class="btn btn-info btn-md"><a class="tropa" href="{{u.1}}">
+					<span class="fa fa-tree" style="font-size:7em"></span>
+					<h4> Tropa <br> Femenina </h4>
+					{% elif u.0.unidad == "Clan Masculino" %}
 					<button type="button" class="btn btn-info btn-md"><a class="clan" href="{{u.1}}">
 					<span class="fa fa-street-view" style="font-size:7em"></span>
+					<h4> Clan <br> Masculino </h4>
+					{% elif u.0.unidad == "Clan Femenino" %}
+					<button type="button" class="btn btn-info btn-md"><a class="clan" href="{{u.1}}">
+					<span class="fa fa-street-view" style="font-size:7em"></span>
+					<h4> Clan <br> Femenino </h4>
 					{%endif%}
-					<h3>{{u.0.unidad}}</h3>
 					</a></button>
 				</div>
 			</div>

@@ -43,7 +43,7 @@
 	================================================== -->
 <section id="about" class="parallax section" style="background-image: url(http://themepush.com/demo/runcharity//static/img/1.jpg);">
 <div class="wrapsection">
-	<div class="parallax-overlay" style="background-color: #612599;opacity:0.9;"></div>
+	<div class="parallax-overlay" style="background-color: #612599;opacity:0.7;"></div>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -63,39 +63,40 @@
 					<a href="?a={{hoy.year|add:1}}" class="btn btn-default btn-lg wow fadeInRight" role="button"> {{hoy.year|add:1}} </a> &nbsp; 
 					<a href="?a={{hoy.year|add:2}}" class="btn btn-default btn-lg wow fadeInLeft" role="button"> {{hoy.year|add:2}} </a> &nbsp; 
 				</p>
+				<div class="tabl" style="overflow:auto;">
 				<table class="table-fill">
 				<thead>
 				<tr>
-				<th class="text-left">DNIS</th>
-				<th class="text-left">Edad</th>
+				<th class="text-left eliminar">DNIS</th>
+				<th class="text-left eliminar">Edad</th>
 				<th class="text-left">Nombre</th>
-				<th class="text-left">Fecha Nacim.</th>
-				<th class="text-left">Fecha Egreso</th>
-				<th class="text-left">Adelanto</th>
-				<th class="text-left">Ene</th>
-				<th class="text-left">Feb</th>
-				<th class="text-left">Mar</th>
-				<th class="text-left">Abr</th>
-				<th class="text-left">May</th>
-				<th class="text-left">Jun</th>
-				<th class="text-left">Jul</th>
-				<th class="text-left">Ago</th>
-				<th class="text-left">Sep</th>
-				<th class="text-left">Oct</th>
-				<th class="text-left">Nov</th>
-				<th class="text-left">Dic</th>
+				<th class="text-left eliminar">Fecha Nacim.</th>
+				<th class="text-left eliminar">Fecha Egreso</th>
+				<th class="text-left eliminar">Adelanto</th>
+				<th class="text-left">E</th>
+				<th class="text-left">F</th>
+				<th class="text-left">M</th>
+				<th class="text-left">A</th>
+				<th class="text-left">M</th>
+				<th class="text-left">J</th>
+				<th class="text-left">J</th>
+				<th class="text-left">A</th>
+				<th class="text-left">S</th>
+				<th class="text-left">O</th>
+				<th class="text-left">N</th>
+				<th class="text-left">D</th>
 				</tr>
 				</thead>
 				<tbody class="table-hover">
 				{% for j in jovenes %}
 				{% if unidad == 'MM' or unidad == "MF" %}
 					<tr >
-					<td class="text-left">{{j.0.id}}</td>
-					<td class="text-left">{{j.1}}</td>
-					<td class="text-left">{{j.0.primer_nombre}} {{j.0.primer_apellido}}</td>
-					<td class="text-left">{{j.3.0|date:'d-m-Y'}}</td>
-					<td class="text-left">{{j.3.1|date:'d-m-Y'}}</td>
-					<td class="text-left">{{j.0.adelanto}}</td>
+					<td class="text-left eliminar">{{j.0.id}}</td>
+					<td class="text-left eliminar">{{j.1}}</td>
+					<td class="text-left" style="text-transform: uppercase"><strong>{{j.0.primer_nombre}}<br>  {{j.0.primer_apellido}}</strong></td>
+					<td class="text-left eliminar">{{j.3.0|date:'d-m-Y'}}</td>
+					<td class="text-left eliminar">{{j.3.1|date:'d-m-Y'}}</td>
+					<td class="text-left eliminar">{{j.0.adelanto}}</td>
 					<td style="padding:0px" colspan="12" class="text-left">
 					<div class="stacked-bar-graph">
 						  {% if j.2.0 != 0 %}
@@ -103,90 +104,90 @@
 						  {% endif %}
 						  {% if j.2.1 != 0 %}
 							  {% if unidad == 'MM' %}
-							  <span style="width:{{j.2.1}}%" class="bar lobato"><p>LOB</p><span>{{j.4.1}}</span></span>
+							  <span style="width:{{j.2.1}}%" class="bar lobato tooltip"><p>LOB</p><span class="tooltiptext">LOB : {{j.4.1 | date:'d/m/Y'}}</span></span>
 							  {%else%}
-							  <span style="width:{{j.2.1}}%" class="bar lobato"><p>LOB</p><span>{{j.4.1}}</span></span>
+							  <span style="width:{{j.2.1}}%" class="bar lobato tooltip"><p>LOB</p><span class="tooltiptext">LOB : {{j.4.1 | date:'d/m/Y'}}</span></span>
 							  {%endif%}
 						  {%endif%}
 						  {% if j.2.2 != 0 %}
-						  <span style="width:{{j.2.2}}%" class="bar fresca tip"><p>FRE</p><span>{{j.4.2}}</span></span>
+						  <span style="width:{{j.2.2}}%" class="bar fresca tooltip"><p>FRE</p><span class="tooltiptext">FRE : {{j.4.2 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.3 != 0 %}
-						  <span style="width:{{j.2.3}}%" class="bar alerta tip"><p>ALE</p><span>{{j.4.3}}</span></span>
+						  <span style="width:{{j.2.3}}%" class="bar alerta tooltip"><p>ALE</p><span class="tooltiptext">ALE : {{j.4.3 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.4 != 0 %}
-						  <span style="width:{{j.2.4}}%" class="bar agil tip"><p>AGI</p><span>{{j.4.4}}</span></span>
+						  <span style="width:{{j.2.4}}%" class="bar agil tooltip">AGI<span class="tooltiptext">AGI : {{j.4.4 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.5 != 0 %}
-						  <span style="width:{{j.2.5}}%" class="bar libre tip"><p>LIB</p><span>{{j.4.5}}</span></span>
+						  <span style="width:{{j.2.5}}%" class="bar libre tooltip"><p>LIB</p><span class="tooltiptext">LIB : {{j.4.5 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.6 != 0 %}
-						  <span style="width:{{j.2.6}}%" class="bar ls tip"><p>LS</p><span>{{j.4.6}}</span></span>
+						  <span style="width:{{j.2.6}}%" class="bar ls tooltip"><p>LS</p><span class="tooltiptext">LS : {{j.4.6 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.7 != 0 %}
-						  <span style="width:{{j.2.7}}%" class="bar desv tip"><p>DES</p><span>{{j.4.7}}</span></span>
+						  <span style="width:{{j.2.7}}%" class="bar desv tooltip"><p>DES</p><span class="tooltiptext">DES : {{j.4.7 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 					</div>
 					</td>
 					</tr>
 				{% elif unidad == "TM" or unidad == "TF" %}
 					<tr >
-					<td class="text-left">{{j.0.id}}</td>
-					<td class="text-left">{{j.1}}</td>
-					<td class="text-left">{{j.0.primer_nombre}} {{j.0.primer_apellido}}</td>
-					<td class="text-left">{{j.3.0|date:'d-m-Y'}}</td>
-					<td class="text-left">{{j.3.1|date:'d-m-Y'}}</td>
-					<td class="text-left">{{j.0.adelanto}}</td>
+					<td class="text-left eliminar">{{j.0.id}}</td>
+					<td class="text-left eliminar">{{j.1}}</td>
+					<td class="text-left" style="text-transform: uppercase">{{j.0.primer_nombre}} <br> {{j.0.primer_apellido}}</td>
+					<td class="text-left eliminar">{{j.3.0|date:'d-m-Y'}}</td>
+					<td class="text-left eliminar">{{j.3.1|date:'d-m-Y'}}</td>
+					<td class="text-left eliminar">{{j.0.adelanto}}</td>
 					<td style="padding:0px" colspan="12" class="text-left">
 					<div class="stacked-bar-graph">
 						  {% if j.2.0 != 0 %}
-						  <span style="width:{{j.2.0}}%" class="bar tip"></span>
+						  <span style="width:{{j.2.0}}%" class="bar tooltip"></span>
 						  {% endif %}
 						  {% if j.2.1 != 0 %}
-						  <span style="width:{{j.2.1}}%" class="bar aventurero tip"><p>AVE</p><span>{{j.4.1}}</span></span>
+						  <span style="width:{{j.2.1}}%" class="bar aventurero tooltip"><p>AVE</p><span class="tooltiptext">AVE: {{j.4.1 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.2 != 0 %}
-						  <span style="width:{{j.2.2}}%" class="bar explorador tip"><p>EXP</p><span>{{j.4.2}}</span></span>
+						  <span style="width:{{j.2.2}}%" class="bar explorador tooltip"><p>EXP</p><span class="tooltiptext">EXP: {{j.4.2 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.3 != 0 %}
-						  <span style="width:{{j.2.3}}%" class="bar pionero tip"><p>PIO</p><span>{{j.4.3}}</span></span>
+						  <span style="width:{{j.2.3}}%" class="bar pionero tooltip"><p>PIO</p><span class="tooltiptext">PIO: {{j.4.3 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.4 != 0 %}
-						  <span style="width:{{j.2.4}}%" class="bar sb tip"><p>SB</p><span>{{j.4.4}}</span></span>
+						  <span style="width:{{j.2.4}}%" class="bar sb tooltip"><p>SB</p><span class="tooltiptext">SB: {{j.4.4 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 						  {% if j.2.5 != 0 %}
-						  <span style="width:{{j.2.5}}%" class="bar desv tip"><p>DES</p><span>{{j.4.5}}</span></span>
+						  <span style="width:{{j.2.5}}%" class="bar desv tooltip"><p>DES</p><span class="tooltiptext">DES: {{j.4.5 | date:'d/m/Y'}}</span></span>
 						  {%endif%}
 					</div>
 					</td>
 					</tr>
 				{% elif unidad == "CM" or unidad == "CF" %}
 					<tr >
-					<td class="text-left">{{j.0.id}}</td>
-					<td class="text-left">{{j.1}}</td>
-					<td class="text-left">{{j.0.primer_nombre}} {{j.0.primer_apellido}}</td>
-					<td class="text-left">{{j.3.0|date:'d-m-Y'}}</td>
-					<td class="text-left">{{j.3.1|date:'d-m-Y'}}</td>
-					<td class="text-left">{{j.0.adelanto}}</td>
+					<td class="text-left eliminar">{{j.0.id}}</td>
+					<td class="text-left eliminar">{{j.1}}</td>
+					<td class="text-left" style="text-transform: uppercase">{{j.0.primer_nombre}} <br>  {{j.0.primer_apellido}}</td>
+					<td class="text-left eliminar">{{j.3.0|date:'d-m-Y'}}</td>
+					<td class="text-left eliminar">{{j.3.1|date:'d-m-Y'}}</td>
+					<td class="text-left eliminar">{{j.0.adelanto}}</td>
 					<td style="padding:0px" colspan="12" class="text-left">
 					<div class="stacked-bar-graph">
 						  {% if j.2.0 != 0 %}
 						  <span style="width:{{j.2.0}}%" class="bar"></span>
 						  {% endif %}
 						  {% if j.2.1 != 0 %}
-						  <span style="width:{{j.2.1}}%" class="bar precursor tip"><p>PRE</p><span>{{j.4.1}}</span></span>
+						  <span style="width:{{j.2.1}}%" class="bar precursor tooltip"><p>PRE</p><span class="tooltiptext">PRE: {{j.4.1 | date:'d/m/Y'}}</span></span>
 						  {% endif %}
 						  {% if j.2.2 != 0 %}
-						  <span style="width:{{j.2.2}}%" class="bar expedicionario tip"><p>EXP</p><span>{{j.4.2}}</span></span>
+						  <span style="width:{{j.2.2}}%" class="bar expedicionario tooltip"><p>EXP</p><span class="tooltiptext">EXP: {{j.4.2 | date:'d/m/Y'}}</span></span>
 						  {% endif %}
 						  {% if j.2.3 != 0 %}
-						  <span style="width:{{j.2.3}}%" class="bar descubridor tip"><p>DES</p><span>{{j.4.3}}</span></span>
+						  <span style="width:{{j.2.3}}%" class="bar descubridor tooltip"><p>DES</p><span class="tooltiptext">DES: {{j.4.3 | date:'d/m/Y'}}</span></span>
 						  {% endif %}
 						  {% if j.2.4 != 0 %}
-						  <span style="width:{{j.2.4}}%" class="bar fundador tip"><p>FUN</p><span>{{j.4.4}}</span></span>
+						  <span style="width:{{j.2.4}}%" class="bar fundador tooltip"><p>FUN</p><span class="tooltiptext">FUN: {{j.4.4 | date:'d/m/Y'}}</span></span>
 						  {% endif %}
 						  {% if j.2.5 != 0 %}
-						  <span style="width:{{j.2.5}}%" class="bar rc tip"><p>RC</p><span>{{j.4.5}}</span></span>
+						  <span style="width:{{j.2.5}}%" class="bar rc tooltip"><p>RC</p><span class="tooltiptext">RC: {{j.4.5 | date:'d/m/Y'}}</span></span>
 						  {% endif %}
 					  </div>
 					</td>
@@ -196,13 +197,14 @@
 				</tbody>
 				</table>
 				</div>
+				</div>
 			</div>
-			
+	
+<br><br><br>		
 		</div>
 	</div>
 </div>
 </section>
-
 
 {% include "fotter.html" %}
 

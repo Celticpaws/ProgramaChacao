@@ -75,7 +75,7 @@ def login(request, method='POST'):
 		if user is not None and user.is_active:
 			auth.login(request, user)
 			g = Grupo.objects.get(usuario=user).grupo
-			return redirect("/metas/"+g)
+			return redirect(g+"/metas/")
 		else:
 			return render(request, "login.html", {})
 	else:
@@ -108,7 +108,7 @@ def cuadrosmetasunidad(request,grupo,unidad):
 			try:
 				ingreso = datetime.strptime(j.f_promesa, '%d/%m/%Y')
 			except:
-				ingreso = hoy
+				ingreso = datetime.today()
 			edades.append((hoy - nacimiento).days/365)
 			if j.unidad == 'Manada Femenina' or j.unidad =='Manada Masculina':
 				egreso = nacimiento + timedelta(days=4012)
