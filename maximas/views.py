@@ -19,6 +19,9 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 import json
 import math
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 # Create your views here.
 def definegrupo(g):
@@ -247,3 +250,15 @@ def cuadrosmetas(request,grupo):
 			{'resumen':resumen,'unidades':zip(unidades,u),'g':grupo,'grupo':g})
 	else:
 		return render(request, '404.html', {})
+
+def certificados(request,codigo):
+	certificado = Certificado.objects.get(codigo=codigo)
+	evento = Evento.objects.get(certificado=certificado)
+	participantes = Participante.objects.filter(evento=evento.nombre).order_by('nombre')
+	return render(request,'certificados.html',{'certificado':certificado,'evento':evento,'participantes':participantes})
+
+def certificadoindividual(request,codigo):
+	certificado = Certificado.objects.get(codigo=codigo)
+	evento = Evento.objects.get(certificado=certificado)
+	participantes = Participante.objects.filter(evento=evento.nombre).order_by('nombre')
+	return render(request,'certificados.html',{'certificado':certificado,'evento':evento,'participantes':participantes})

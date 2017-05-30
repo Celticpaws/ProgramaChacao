@@ -1,16 +1,18 @@
 <header id="header" class="navbar navbar-inverse navbar-fixed-top" role="banner">
 <div class="container">
 	<div class="navbar-header">
+		{%if request.user.is_authenticated %}
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
 		<span class="sr-only">Toggle navigation</span>
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
-		</button>
+		</button>{%endif %}
 		<!-- Your Logo -->
 		<a href="https://scoutschacao.org.ve" class="navbar-brand">PROGRAMA DE JOVENES <span class="lighter">CHACAO</span></a>
 	</div>
 	<!-- Start Navigation -->
+	{%if request.user.is_authenticated %}
 	<nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
 	<ul class="nav navbar-nav">
 		<li>
@@ -22,5 +24,6 @@
 		</li>
 	</ul>
 	</nav>
+	{%endif%}
 </div>
 </header>

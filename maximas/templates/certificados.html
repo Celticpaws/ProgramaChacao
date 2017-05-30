@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Meta, title, CSS, favicons, etc. -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+  <title>PROGRAMA DE JOVENES - CHACAO </title>
+	
+	<!-- Styles -->
+	<link rel='stylesheet' href='/static/css/bootstrap.min.css'>
+	<link rel='stylesheet' href='/static/css/animate.min.css'>
+	<link rel='stylesheet' href="/static/css/font-awesome.min.css"/>
+	<link rel='stylesheet' href="/static/css/style.css"/>
+	
+	<!-- Fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800' rel='stylesheet' type='text/css'>
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+	<![endif]-->
+			
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="#">
+</head>
+<body>
+<!-- Begin Hero Bg -->
+<div id="parallax">
+</div>
+<!-- End Hero Bg
+	================================================== -->
+<!-- Start Header
+	================================================== -->
+{% include "header.html" %}
+
+<!-- Intro
+	================================================== -->
+
+<!-- About
+	================================================== -->
+<section id="about" class="parallax section" style="background-image: url(http://themepush.com/demo/runcharity//static/img/1.jpg);">
+<div class="wrapsection">
+	<div class="parallax-overlay" style="background-color: #612599;opacity:0.7;"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- Title -->
+
+				<div class="maintitle">
+				
+				<img style="width: 20%;border-radius: 25px;" src='/static/img/eventos/{{evento.nombre}}.jpg'>
+				<br>
+				<br>
+				
+					<h3 class="section-title"><strong>PARTICIPANTES <span class="lighter"> EN</span></strong> {{evento.nombre}}</h3>
+				
+				<br>
+				<div class="col-sm-4">
+				<h3 align="right"> Buscar:</h3>
+				</div><div class="col-sm-6">
+				<input id="myInput" type="search" onkeyup="return myFilter()" class="buscar-atleta">
+				</div><br><br><br>
+				
+				<div class="tabl" style="overflow:auto;">
+				<table class="table-fill">
+				<thead>
+				<tr>
+				<th style="width:20%" class="text-left">Código</th>
+				<th class="text-left">Nombre</th>
+				<th class="text-left">Certificado</th>
+				</tr>
+				</thead>
+				<tbody class="table-hover">
+				{% for j in participantes %}
+					<tr id="r{{forloop.counter}}">
+					<td class="text-left">{{j.numero}}</td>
+					<td class="text-left" style="text-transform: uppercase"><strong id="n{{forloop.counter}}">{{j.nombre}}</strong></td>
+					<td class="text-left"><a href="/static/certificados/{{evento.nombre}}/p{{j.numero|add:'0'|stringformat:'02d'}}.pdf"><span class="fa fa-download" style="font-size:2em"></span></a></td>
+					</tr>
+				{% endfor %}
+				</tbody>
+				</table>
+				</div>
+				</div>
+			</div>
+	
+<br><br><br>		
+		</div>
+	</div>
+</div>
+</section>
+
+{% include "fotter.html" %}
+
+<!-- Bootstrap core JavaScript
+	================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/waypoints.min.js"></script>
+<script src="/static/js/jquery.scrollTo.min.js"></script>
+<script src="/static/js/jquery.localScroll.min.js"></script>
+<script src="/static/js/jquery.magnific-popup.min.js"></script>
+<script src="/static/js/validate.js"></script>
+<script src="/static/js/common.js"></script>
+<script type="text/javascript">
+function myFilter() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    for (i = 1; i <= parseInt('{{participantes.count}}'); i++) {
+        palabra = document.getElementById('n'+i);
+        console.log(palabra.innerHTML);
+        if (palabra.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            document.getElementById('r'+i).style.display = "";
+        } else {
+            document.getElementById('r'+i).style.display = "none";
+
+        }
+    }
+}
+</script>
+
+</body>
+</html>

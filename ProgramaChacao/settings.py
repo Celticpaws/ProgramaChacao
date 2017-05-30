@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,7 +27,7 @@ SECRET_KEY = '_zl3r05wez$6r@ip!i$wk9&@0b7&z%n78k!9m%hiay=bjdfk6$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','programachacao.pythonanywhere.com']
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 # Application definition
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'maximas',
     'core',
+    'import_export',
 ]
 
 SITE_ID = 1

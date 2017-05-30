@@ -10,10 +10,6 @@ from import_export.admin import ImportExportMixin, ImportMixin, ExportActionMode
 from .models import *
 # Register your models here.
 
-class ChildAdmin(ImportMixin, admin.ModelAdmin):
-    pass
-
-
 class JovenResource(ModelResource):
 
     class Meta:
@@ -27,9 +23,28 @@ class JovenAdmin(ImportExportMixin, admin.ModelAdmin):
     list_filter = ['unidad', 'grupo']
     resource_class = JovenResource
 
+class ParticipanteResource(ModelResource):
+
+    class Meta:
+        model = Participante
+
+    def for_delete(self, row, instance):
+        return self.fields['id'].clean(row) == ''
+
+
+class ParticipanteAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_filter = ['nombre', 'numero']
+    resource_class = ParticipanteResource
+
+
+
+
 class AdultoAdmin(ImportMixin, admin.ModelAdmin):
     pass
 
 admin.site.register(Joven, JovenAdmin)
 admin.site.register(Adulto, AdultoAdmin)
 admin.site.register(Grupo)
+admin.site.register(Evento)
+admin.site.register(Certificado)
+admin.site.register(Participante,ParticipanteAdmin)

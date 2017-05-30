@@ -65,3 +65,26 @@ class Adulto(models.Model):
 class Grupo(models.Model):
 	grupo = models.CharField(max_length=3)
 	usuario = models.ForeignKey('auth.User')
+
+class Evento (models.Model):
+	certificado = models.ForeignKey('Certificado')
+	nombre = models.CharField(max_length=50)
+
+	def __str__(self):
+		return str(self.nombre)
+
+class Certificado(models.Model):
+	codigo = models.CharField(max_length=30)
+	razon = models.CharField(max_length=50)
+
+	def __str__(self):
+		return str(self.razon)
+
+class Participante(models.Model):
+	dnis = models.IntegerField(default=0)
+	nombre = models.CharField(max_length=120)
+	evento = models.CharField(max_length=100)
+	numero = models.CharField(max_length=3)
+
+	def __str__(self):
+		return self.nombre+" "+str(self.evento)
