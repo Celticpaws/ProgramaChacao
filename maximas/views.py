@@ -20,10 +20,7 @@ from django.utils.dateparse import parse_datetime
 import json
 import math
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
-# Create your views here.
 def definegrupo(g):
 	if g == "STA":
 		return "SANTO TOMAS DE AQUINO"
@@ -239,7 +236,7 @@ def cuadrosmetas(request,grupo):
 		unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
 		u = []
 		for x in unidades:
-			print x
+			print (x)
 			u.append(undefineunidad(x['unidad']))
 		adelantos =['Cachorro','Huella Fresca','Huella Alerta','Huella Agil','Huella Libre','Lobo Saltarin','Novicio','Aventurero','Explorador','Pionero','Scout de Bolivar','Novato','Precursor','Expedicionario','Descubridor','Fundador','Rover Ciudadano']
 		can = []
