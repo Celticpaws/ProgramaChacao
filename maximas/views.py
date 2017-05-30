@@ -67,7 +67,7 @@ def login(request, method='POST'):
 	form = RegisterForm()
 	if request.user.is_authenticated():
 		g = Grupo.objects.get(usuario=request.user).grupo
-		return redirect("/metas/"+g)
+		return redirect(g+"/metas/")
 	elif request.method == 'POST':
 		username = request.POST.get('username', '')
 		password = request.POST.get('password', '')
