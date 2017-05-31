@@ -90,8 +90,8 @@
 				{% for j in jovenes %}
 				{% if unidad == 'MM' or unidad == "MF" %}
 					<tr >
-					<td class="text-left eliminar">{{j.0.id}}</td>
-					<td class="text-left eliminar">{{j.1|floatformat:0}}</td>
+					<td class="text-center eliminar">{{j.0.id}}</td>
+					<td class="text-center eliminar">{{j.1|floatformat:0}}</td>
 					<td class="text-left" style="text-transform: uppercase"><strong>{{j.0.primer_nombre}}<br>  {{j.0.primer_apellido}}</strong></td>
 					<td class="text-left eliminar">{{j.3.0|date:'d-m-Y'}}</td>
 					<td class="text-left eliminar">{{j.3.1|date:'d-m-Y'}}</td>
