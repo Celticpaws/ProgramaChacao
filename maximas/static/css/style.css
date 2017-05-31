@@ -15,6 +15,9 @@ input.buscar-atleta {
 	outline: none;
 	border-radius: 20px
 }
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    white;
+}
 a {
 	color:#512599;
 	cursor:pointer;
