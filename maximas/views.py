@@ -17,6 +17,13 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.platypus import *
+from cStringIO import StringIO
+from reportlab.lib.utils import ImageReader
+import urllib
 import json
 import math
 import sys
@@ -254,8 +261,26 @@ def certificados(request,codigo):
 	participantes = Participante.objects.filter(evento=evento.nombre).order_by('nombre')
 	return render(request,'certificados.html',{'certificado':certificado,'evento':evento,'participantes':participantes})
 
-def certificadoindividual(request,codigo):
-	certificado = Certificado.objects.get(codigo=codigo)
-	evento = Evento.objects.get(certificado=certificado)
-	participantes = Participante.objects.filter(evento=evento.nombre).order_by('nombre')
-	return render(request,'certificados.html',{'certificado':certificado,'evento':evento,'participantes':participantes})
+def certificadoindividual(request,evento,nombre):
+    evento = Evento.objects.get(certificado__codigo=evento)
+    participante = Participante.objects.get(numero=nombre)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = "filename='"+evento.certificado.codigo+"-"+participante.numero+".pdf'"
+    
+    logo = ImageReader("maximas/static/certificados/"+evento.certificado.codigo+".jpg")
+    
+    p = canvas.Canvas(response,pagesize=landscape(letter))
+    print (p.getAvailableFonts)
+    w, h = landscape(letter)
+    p.drawImage(logo, 0,0,width=w,height=h) 
+    p.setFillColorRGB(0.2,0.5,0.3)
+    p.setFont("Helvetica-Bold",48)
+    p.drawCentredString(w/2, h/2-50, participante.nombre)
+    p.setFillColorRGB(1,1,1)
+    p.setFont("Helvetica",12)
+    p.drawCentredString(w/2+300, h/2-250, evento.certificado.codigo+"-"+participante.numero)
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response

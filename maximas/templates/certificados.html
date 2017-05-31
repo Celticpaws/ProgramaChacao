@@ -78,7 +78,7 @@
 					<tr id="r{{forloop.counter}}">
 					<td class="text-center">{{j.numero}}</td>
 					<td class="text-left" style="text-transform: uppercase"><strong id="n{{forloop.counter}}">{{j.nombre}}</strong></td>
-					<td class="text-left"><a href="/static/certificados/{{evento.nombre}}/p{{j.numero|add:'0'|stringformat:'02d'}}.pdf"><span class="fa fa-download" style="font-size:2em"></span></a></td>
+					<td class="text-left"><a href="/certificados/{{evento.certificado.codigo}}/{{j.numero}}"><span class="fa fa-download" style="font-size:2em"></span></a></td>
 					</tr>
 				{% endfor %}
 				</tbody>

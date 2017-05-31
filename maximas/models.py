@@ -76,7 +76,6 @@ class Evento (models.Model):
 class Certificado(models.Model):
 	codigo = models.CharField(max_length=30)
 	razon = models.CharField(max_length=50)
-
 	def __str__(self):
 		return str(self.razon)
 
