@@ -1,10 +1,9 @@
 body {
-	color:#444;
+	color:#612599;
 	font:normal 16px "Raleway","Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-weight:300;
 	background-color:#fff;
 	overflow-x:hidden;
-	line-height:1.5;
 }
 input.buscar-atleta {
 	width: 100%;
@@ -14,9 +13,10 @@ input.buscar-atleta {
 	padding: 5px;
 	color: #fff;
 	outline: none;
+	border-radius: 20px
 }
 a {
-	color:#4a3161;
+	color:#512599;
 	cursor:pointer;
 	text-decoration:none;
 		-moz-transition:all .2s;
@@ -47,40 +47,40 @@ a.clan :hover,a.clan:focus {
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	font-family:"Raleway","Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-weight:bold;
-	margin-bottom:15px;
+	margin-bottom:5px;
 	margin-top:0;
 }
 h1 {
-	font-size:38px;
+	font-size:19px;
 }
 h2 {
-	font-size:32px;
+	font-size:16px;
 }
 h3 {
-	font-size:24px;
+	font-size:12px;
 	display:block;
 }
 h4 {
-	font-size:20px;
+	font-size:10px;
 }
 h5 {
-	font-size:18px;
+	font-size:9px;
 }
 h6 {
-	font-size:16px;
+	font-size:8px;
 }
 p.lead {
-	font-size:24px;
+	font-size:12px;
 	font-weight:200;
 }
 p {
-	margin-bottom:20px;
+	margin-bottom:10px;
 }
 p:last-child {
 	margin-bottom:0;
 }
 ul,ol {
-	margin-bottom:20px;
+	margin-bottom:10px;
 }
 blockquote {
 	padding-top:0;
@@ -111,7 +111,7 @@ img {
 }
 .section-title {
 	text-transform:uppercase;
-	font-size:30px;
+	font-size:20px;
 	letter-spacing:5px;
 }
 .whitecolor {
@@ -153,6 +153,7 @@ img {
 }
 .btn-default,.label-default {
 	border-color:#FFF;
+	border-radius:15px;
 	color:#fff;
 	background-color:transparent;
 	border-width:2px;
@@ -161,12 +162,12 @@ img {
 .btn-default:hover,.btn-default:focus {
 	background-color:#F9FAFD;
 	border-color:#F9FAFD;
-	color:#444;
+	color:#612599;
 }
 .actual {
 	background-color:#F9FAFD;
 	border-color:#F9FAFD;
-	color:#444;
+	color:#612599;
 }
 .btn-success,.label-success,.alert-success {
 	background-color:#FFF;
@@ -179,8 +180,8 @@ img {
 	color:#000;
 }
 .btn-primary,.label-primary {
-	background-color:#444;
-	border-color:#444;
+	background-color:#612599;
+	border-color:#612599;
 }
 .btn-primary:hover,.btn-primary:focus {
 	background-color:#d33c00;
@@ -257,12 +258,14 @@ img {
 	background-color:#1abc9c;
 }
 .navbar-inverse .navbar-collapse,.navbar-inverse .navbar-form {
-	border-color:#bdc3c7;
+	border-color:#612599;
+	background-color:#612599;
 }
 .navbar-inverse .navbar-toggle {
-	background-color:#34495e;
-	border-color:#2c3e50;
+	background-color:#612599;
 	margin-top:23px;
+	position: absolute;
+    right: 0;
 }
 .navbar-inverse .navbar-toggle:focus {
 	outline:none;
@@ -280,7 +283,7 @@ img {
 }
 .panel-default>.panel-heading {
 	background:#fff;
-	color:#444;
+	color:#612599;
 }
 .panel-heading {
 	padding:20px 25px;
@@ -421,12 +424,12 @@ label {
 .navbar-inverse .navbar-brand {
 	padding:30px 15px;
 	margin-right:30px;
-	color:inherit;
+	color:#612599;
 	text-transform:uppercase;
 	font-weight:bold;
 }
 .navbar-inverse .navbar-brand:hover,.navbar-inverse .navbar-brand:focus {
-	color:#000;
+	color:#9667c3;;
 }
 .navbar-inverse {
 	background-color:#FFF;
@@ -436,11 +439,10 @@ label {
 	margin:23px 0;
 }
 .navbar-nav>li>a {
-	padding:30px 0;
 	margin:0 15px;
 }
 .navbar-inverse .navbar-nav>li>a {
-	color:inherit;
+	color:white;
 	text-transform:uppercase;
 	font-size:12px;
 	font-weight:bold;
@@ -492,7 +494,7 @@ label {
 .service-box {
 	margin-bottom:30px;
 	background-color:#fff;
-	color:#444;
+	color:#612599;
 	padding:30px;
 	  position: relative;
 }
@@ -529,7 +531,7 @@ label {
 	background-color:#fff;
 	display:block;
 	padding:20px 15px;
-	color:#333;
+	color:#281050;
 	text-transform:uppercase;
 	clear:both;
 	position: relative;
@@ -655,7 +657,7 @@ label {
 	line-height:inherit;
 	width:100%;
 	border:0px;
-	color:#333;
+	color:#281050;
 	background-color:#fff;
 	border:0;
 }
@@ -725,7 +727,7 @@ label {
 	padding: 20px;
 }
 #credits {
-	background-color: #4a3161;
+	background-color: #512599;
 	padding:30px 0;
 	text-transform:uppercase;
 	font-size:13px;
@@ -747,7 +749,7 @@ label {
 	display:inline-block;
 }
 #credits .social i:hover {
-	color: #333;
+	color: #281050;
 }
 /*	Magnific Popup	==================================================*/
 .mfp-bg {
@@ -898,7 +900,7 @@ button::-moz-focus-inner {
 	top:1px;
 }
 .mfp-close-btn-in .mfp-close {
-	color:#333;
+	color:#281050;
 }
 .mfp-image-holder .mfp-close,.mfp-iframe-holder .mfp-close {
 	color:#FFF;
@@ -1035,7 +1037,7 @@ img.mfp-img {
 	height:auto;
 	z-index:-1;
 	box-shadow:0 0 8px rgba(0,0,0,0.6);
-	background:#444;
+	background:#612599;
 }
 .mfp-figure small {
 	color:#BDBDBD;
@@ -1229,9 +1231,9 @@ img.mfp-img {
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
 
 body {
-  background-color: #4a3161;
+  background-color: #512599;
   font-family: "Roboto", helvetica, arial, sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 400;
   text-rendering: optimizeLegibility;
 }
@@ -1270,9 +1272,9 @@ div.table-title {
  
 th {
  	color: #D5DDE5;
-    background: #2e1644;
+    background: #612599;
     border-bottom: 4px solid #9ea7af;
-    border-right: 1px solid #343a45;
+    border-right: 1px solid #43176d;
     font-size: 12px;
     font-weight: 100;
     padding: 12px;   
@@ -1297,7 +1299,7 @@ th:last-child {
 tr {
   border-top: 1px solid #C1C3D1;
   border-bottom-: 1px solid #C1C3D1;
-  color:#2e1644;
+  color:#612599;
   font-size:16px;
   font-weight:normal;
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
@@ -1388,7 +1390,7 @@ td.text-right {
 .tooltip .tooltiptext {
     visibility: hidden;
     width: 120px;
-    background-color: #4a3161;
+    background-color: #512599;
     color: #fff;
     text-align: center;
     border-radius: 6px;
@@ -1444,15 +1446,15 @@ td.text-right {
   height: 0px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #4a3161;
-  border: 10px none #4a3161;
+  background: #512599;
+  border: 10px none #512599;
   border-radius: 90px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4a3161;
+  background: #512599;
 }
 ::-webkit-scrollbar-thumb:active {
-  background: #4a3161;
+  background: #512599;
 }
 ::-webkit-scrollbar-track {
   background: white;
@@ -1634,7 +1636,8 @@ td.text-right {
 	  animation: float 5s infinite;
 	}
 	.tabl{
-		max-height: 150px;
+		max-height: 300px;
+    	border-radius: 5px;
 	}
 	.wrapsection {  
     padding-top:10px;
@@ -1663,6 +1666,9 @@ td.text-right {
 	td{
 		font-size:10px;
 		padding:4px;
+	}
+	header{
+		background-color:white;
 	}
 
 }

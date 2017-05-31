@@ -1,29 +1,37 @@
-<header id="header" class="navbar navbar-inverse navbar-fixed-top" role="banner">
+<header style="background-image:url('/static/img/cuerda.png');background-repeat: no-repeat;background-position: left center;opacity:20%" id="header" class="navbar navbar-inverse navbar-fixed-top" role="banner">
 <div class="container">
 	<div class="navbar-header">
-		{%if request.user.is_authenticated %}
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
 		<span class="sr-only">Toggle navigation</span>
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
-		</button>{%endif %}
+		</button>
 		<!-- Your Logo -->
-		<a href="https://scoutschacao.org.ve" class="navbar-brand">PROGRAMA DE JOVENES <span class="lighter">CHACAO</span></a>
+		<a href="#hero" class="navbar-brand"><img style="max-height:100%" align="left" src='/static/img/logoscout-01.png'/><a href="#hero" class="navbar-brand">PROGRAMA DE JOVENES <span class="lighter">CHACAO</span></a>
 	</div>
+</div>
 	<!-- Start Navigation -->
-	{%if request.user.is_authenticated %}
-	<nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
+	<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	{%if user.is_authenticated %}
 	<ul class="nav navbar-nav">
 		<li>
-		<a href="/">DASHBOARD</a>
+		<a href="./">CUADROS DE METAS</a>
 		</li>
 		<li>
+		<a href="#cip">CIP</a>
+		</li>
 		<li>
-		<a href="/logout">Logout</a>
+		<a href="#slider">CURSOS</a>
+		</li>
+		<li>
+		<a href="#faq">ESPECIALIDADES</a>
+		</li>
+		<li>
+		<a href="/logout">LOGOUT</a>
 		</li>
 	</ul>
-	</nav>
 	{%endif%}
-</div>
+	</nav>
 </header>
+
