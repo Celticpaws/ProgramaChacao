@@ -81,7 +81,7 @@
 				{% for j in participantes %}
 					<tr id="r{{forloop.counter}}">
 					<td class="text-center">{{j.numero}}</td>
-					<td class="text-left" style="text-transform: uppercase"><strong id="n{{forloop.counter}}">{{j.nombre}}</strong></td>
+					<td class="text-left" style="text-transform: uppercase"><strong id="n{{forloop.counter}}">{{j.primer_nombre}} {{j.segundo_nombre}} {{j.primer_apellido}} {{j.segundo_apellido}}</strong></td>
 					<td class="text-left"><a href="/certificados/{{evento.certificado.codigo}}/{{j.numero}}"><span class="fa fa-download" style="font-size:2em"></span></a></td>
 					</tr>
 				{% endfor %}
@@ -110,7 +110,8 @@
 <script src="/static/js/jquery.magnific-popup.min.js"></script>
 <script src="/static/js/validate.js"></script>
 <script src="/static/js/common.js"></script>
-<script type="text/javascript">
+
+<script>
 function myFilter() {
     var input, filter, ul, li, a, i;
     input = document.getElementById("myInput");

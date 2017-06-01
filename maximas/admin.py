@@ -33,7 +33,7 @@ class ParticipanteResource(ModelResource):
 
 
 class ParticipanteAdmin(ImportExportMixin, admin.ModelAdmin):
-    list_filter = ['nombre', 'numero']
+    list_filter = ['primer_apellido', 'numero']
     resource_class = ParticipanteResource
 
 
@@ -46,5 +46,6 @@ admin.site.register(Joven, JovenAdmin)
 admin.site.register(Adulto, AdultoAdmin)
 admin.site.register(Grupo)
 admin.site.register(Evento)
+admin.site.register(CIP)
 admin.site.register(Certificado)
 admin.site.register(Participante,ParticipanteAdmin)

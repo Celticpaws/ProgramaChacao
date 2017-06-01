@@ -243,7 +243,6 @@ def cuadrosmetas(request,grupo):
 		unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
 		u = []
 		for x in unidades:
-			print (x)
 			u.append(undefineunidad(x['unidad']))
 		adelantos =['Cachorro','Huella Fresca','Huella Alerta','Huella Agil','Huella Libre','Lobo Saltarin','Novicio','Aventurero','Explorador','Pionero','Scout de Bolivar','Novato','Precursor','Expedicionario','Descubridor','Fundador','Rover Ciudadano']
 		can = []
@@ -255,10 +254,106 @@ def cuadrosmetas(request,grupo):
 	else:
 		return render(request, '404.html', {})
 
+@login_required(login_url ='/')
+def cipgrupo(request,grupo):
+	g =  definegrupo(grupo)
+	grupo = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+
+	if (grupo == g):
+		unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
+		u = []
+		for x in unidades:
+			u.append(undefineunidad(x['unidad']))
+		manada = CIP.objects.filter(unidad='M').order_by('nivel')
+		tropa = CIP.objects.filter(unidad='T').order_by('nivel')
+		clan = CIP.objects.filter(unidad='C').order_by('nivel')
+		general = CIP.objects.filter(unidad='G').order_by('nivel')
+		
+		jovenesmanada = Joven.objects.values_list('pk',flat=True).filter(grupo=g,unidad__in=['Manada Masculina','Manada Femenina'])
+		jovenestropa = Joven.objects.values_list('pk',flat=True).filter(grupo=g,unidad__in=['Tropa Masculina','Tropa Femenina'])
+		jovenesclan = Joven.objects.values_list('pk',flat=True).filter(grupo=g,unidad__in=['Clan Masculino','Clan Femenino'])
+		jovenesgeneral = Joven.objects.values_list('pk',flat=True).filter(grupo=g)
+
+		listmanada=[]
+		for x in manada:
+			listmanada.append(Participante.objects.filter(dnis__in=jovenesmanada,evento=x.nombre).count())
+		listtropa=[]
+		for x in tropa:
+			listtropa.append(Participante.objects.filter(dnis__in=jovenestropa,evento=x.nombre).count())
+		listclan=[]
+		for x in clan:
+			listclan.append(Participante.objects.filter(dnis__in=jovenesclan,evento=x.nombre).count())
+		listgeneral=[]
+		for x in general:
+			listgeneral.append(Participante.objects.filter(dnis__in=jovenesgeneral,evento=x.nombre).count())
+		return render(request, 'cipgrupo.html', 
+			{'unidades':zip(unidades,u),'g':grupo,'grupo':g,'manada':zip(manada,listmanada),'tropa':zip(tropa,listtropa),'clan':zip(clan,listclan),'general':zip(general,listgeneral),})
+	else:
+		return render(request, '404.html', {})
+
+@login_required(login_url ='/')
+def cipunidad(request,grupo,unidad):
+	g =  definegrupo(grupo)
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	if (gru == g):
+		gr = definegrupo(grupo)
+		u = defineunidad(unidad)
+		jovenes = Joven.objects.filter(grupo=gr,unidad=u)
+		if unidad == "MM" or unidad == "MF":
+			grupal = CIP.objects.filter(unidad='G') 
+			distrital = CIP.objects.filter(unidad='M',nivel ="Distrital")
+			regional = CIP.objects.filter(unidad='M',nivel ="Regional")
+			nacional = CIP.objects.filter(unidad='M',nivel ="Nacional") 
+		elif unidad == "TM" or unidad == "TF":
+			grupal = CIP.objects.filter(unidad='G')
+			distrital = CIP.objects.filter(unidad='T',nivel ="Distrital")
+			regional = CIP.objects.filter(unidad='T',nivel ="Regional")
+			nacional = CIP.objects.filter(unidad='T',nivel ="Nacional")
+		elif unidad == "CM" or unidad == "CF":
+			grupal = CIP.objects.filter(unidad='G')
+			distrital = CIP.objects.filter(unidad='C',nivel ="Distrital")
+			regional = CIP.objects.filter(unidad='C',nivel ="Regional")
+			nacional = CIP.objects.filter(unidad='C',nivel ="Nacional")
+		listado = []
+		for j in jovenes:
+			listagrupo = []
+			for g in grupal:
+				try:
+					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+					e = Certificado.objects.get(razon=p.evento)
+					listagrupo.append([p.numero,e.codigo])
+				except:
+					listagrupo.append([0,0])
+			for g in distrital:
+				try:
+					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+					e = Certificado.objects.get(razon=p.evento)
+					listagrupo.append([p.numero,e.codigo])
+				except:
+					listagrupo.append([0,0])
+			for g in regional:
+				try:
+					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+					e = Certificado.objects.get(razon=p.evento)
+					listagrupo.append([p.numero,e.codigo])
+				except:
+					listagrupo.append([0,0])
+			for g in nacional:
+				try:
+					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+					e = Certificado.objects.get(razon=p.evento)
+					listagrupo.append([p.numero,e.codigo])
+				except:
+					listagrupo.append([0,0])
+			listado.append(listagrupo)
+		return render(request,'cipunidad.html',{'g':gr,'u':u,'jovenes':zip(jovenes,listado),'grupal':grupal,'distrital':distrital,'regional':regional,'nacional':nacional})
+	else:
+		return render(request, '404.html', {})
+
 def certificados(request,codigo):
 	certificado = Certificado.objects.get(codigo=codigo)
 	evento = Evento.objects.get(certificado=certificado)
-	participantes = Participante.objects.filter(evento=evento.nombre).order_by('nombre')
+	participantes = Participante.objects.filter(evento=evento.nombre)
 	return render(request,'certificados.html',{'certificado':certificado,'evento':evento,'participantes':participantes})
 
 def certificadoindividual(request,evento,nombre):
@@ -270,7 +365,6 @@ def certificadoindividual(request,evento,nombre):
     logo = ImageReader("maximas/static/certificados/"+evento.certificado.codigo+".jpg")
     
     p = canvas.Canvas(response,pagesize=landscape(letter))
-    print (p.getAvailableFonts)
     w, h = landscape(letter)
     p.drawImage(logo, 0,0,width=w,height=h) 
     p.setFillColorRGB(0.2,0.5,0.3)

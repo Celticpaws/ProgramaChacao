@@ -66,12 +66,35 @@ class Grupo(models.Model):
 	grupo = models.CharField(max_length=3)
 	usuario = models.ForeignKey('auth.User')
 
+	def __str__(self):
+		return str(self.grupo)
+
+
 class Evento (models.Model):
 	certificado = models.ForeignKey('Certificado')
 	nombre = models.CharField(max_length=50)
 
 	def __str__(self):
 		return str(self.nombre)
+
+class CIP (models.Model):
+	unidades = (
+    ('M','M'), ('T','T'),  ('C','C'), ('G','G')) 
+	nivel = (
+    ('Grupal','Grupal'),    ('Distrital','Distrital'),
+    ('Regional','Regional'),    ('Nacional','Nacional'),) 
+
+	certificado = models.ForeignKey('Certificado',null=True,blank=True)
+	nombre = models.CharField(max_length=50)
+	fecha = models.DateField()
+	nivel = models.CharField(choices=nivel,max_length=10)
+	unidad = models.CharField(choices=unidades,max_length=1)
+
+	def __str__(self):
+		return self.unidad+" "+self.nombre
+
+	def __unicode__(self):
+		return self.unidad+" "+self.nombre
 
 class Certificado(models.Model):
 	codigo = models.CharField(max_length=30)
@@ -81,9 +104,12 @@ class Certificado(models.Model):
 
 class Participante(models.Model):
 	dnis = models.IntegerField(default=0)
-	nombre = models.CharField(max_length=120)
+	primer_nombre = models.CharField(max_length=120)
+	segundo_nombre = models.CharField(max_length=120)
+	primer_apellido = models.CharField(max_length=120)
+	segundo_apellido = models.CharField(max_length=120)
 	evento = models.CharField(max_length=100)
 	numero = models.CharField(max_length=3)
 
 	def __str__(self):
-		return self.nombre+" "+str(self.evento)
+		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
