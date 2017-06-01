@@ -21,7 +21,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import *
-from cStringIO import StringIO
+from io import StringIO
 from reportlab.lib.utils import ImageReader
 import urllib
 import json
