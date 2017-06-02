@@ -362,7 +362,7 @@ def certificadoindividual(request,evento,nombre):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = "filename='"+evento.certificado.codigo+"-"+participante.numero+".pdf'"
     
-    logo = ImageReader("maximas/static/certificados/"+evento.certificado.codigo+".jpg")
+    logo = ImageReader("static/certificados/"+evento.certificado.codigo+".jpg")
     
     p = canvas.Canvas(response,pagesize=landscape(letter))
     w, h = landscape(letter)
