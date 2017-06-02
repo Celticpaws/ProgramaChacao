@@ -42,6 +42,10 @@ class Joven(models.Model):
 	def __str__(self):
 		return str(self.id)+" - "+self.primer_nombre+" "+self.primer_apellido+" - "+self.unidad+" - "+self.grupo+" "
 
+	def __unicode__(self):
+		return str(self.id)+" - "+self.primer_nombre+" "+self.primer_apellido+" - "+self.unidad+" - "+self.grupo+" "
+
+
 class Adulto(models.Model):
 	cedula = models.IntegerField(default=0)
 	primer_nombre = models.CharField(max_length=30)
@@ -112,4 +116,7 @@ class Participante(models.Model):
 	numero = models.CharField(max_length=3)
 
 	def __str__(self):
+		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
+
+	def __unicode__(self):
 		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)

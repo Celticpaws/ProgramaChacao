@@ -362,14 +362,14 @@ def certificadoindividual(request,evento,nombre):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = "filename='"+evento.certificado.codigo+"-"+participante.numero+".pdf'"
     
-    logo = ImageReader("/ProgramaChacao/maximas/static/certificados/"+evento.certificado.codigo+".jpg")
+    logo = ImageReader("maximas/static/certificados/"+evento.certificado.codigo+".jpg")
     
     p = canvas.Canvas(response,pagesize=landscape(letter))
     w, h = landscape(letter)
     p.drawImage(logo, 0,0,width=w,height=h) 
     p.setFillColorRGB(0.2,0.5,0.3)
     p.setFont("Helvetica-Bold",48)
-    p.drawCentredString(w/2, h/2-50, participante.nombre)
+    p.drawCentredString(w/2, h/2-50, participante.primer_nombre.upper()+" "+participante.primer_apellido.upper())
     p.setFillColorRGB(1,1,1)
     p.setFont("Helvetica",12)
     p.drawCentredString(w/2+300, h/2-250, evento.certificado.codigo+"-"+participante.numero)
