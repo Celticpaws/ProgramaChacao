@@ -81,6 +81,23 @@ class Evento (models.Model):
 	def __str__(self):
 		return str(self.nombre)
 
+class Condecoraciones(models.Model):
+	con = (
+		('NPB','Nudo de Perseverancia en Bronce'),('NPP','Nudo de Perseverancia en Plata'), ('NPO','Nudo de Perseverancia en Oro'),
+		('BESP','Barra de Espiritud Scout en Plata'), ('BESO','Barra de Espiritud Scout en Oro'),
+		('BV','Barra Vinotinto'),('OM1','Orden al Merito Primera Clase'),('OM2','Orden al Segunda Clase'),('OSJ','Orden de San Jorge')) 
+	dnis = models.IntegerField(default=0)
+	condecoracion = models.CharField(max_length=4,choices=con)
+	fecha_entrega = models.DateField(default=datetime.now)
+	numero = models.IntegerField(default=0)
+
+	def __str__(self):
+		return self.condecoracion+" - "+str(self.dnis)
+
+
+	def __unicode__(self):
+		return self.condecoracion+" - "+str(self.dnis)
+
 class CIP (models.Model):
 	unidades = (
     ('M','M'), ('T','T'),  ('C','C'), ('G','G')) 
@@ -115,8 +132,50 @@ class Participante(models.Model):
 	evento = models.CharField(max_length=100)
 	numero = models.CharField(max_length=3)
 
-	def __str__(self):
+def __str__(self):
 		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
 
+def __unicode__(self):
+	return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
+
+class Prueba(models.Model):
+	a = (('CA','Cachorro'),('HF','Huella Fresca'),
+				('HA','Huella Alerta'),('HG','Huella Agil'),
+				('HL','Huella Libre'),('LS','Lobo Saltarin'),
+				('NO','Novicio'),('AV','Aventurero'),
+				('EX','Explorador'),('PI','Pionero'),
+				('SB','Scout de Bolivar'),('NV','Novato'),
+				('PR','Precursor'),('EP','Expedicionario'),
+				('DE','Descubridor'),('FU','Fundador'),('RC','Rover Ciudadano'))
+	unidades = (
+    ('M','Manada'), ('T','Tropa'),  ('C','Clan'), ('G','Grupo')) 
+	unidad = models.CharField(max_length=1,choices=unidades)
+	adelanto = models.CharField(max_length=2,choices=a)
+	nombre = models.CharField(max_length=100)
+	descripcion = models.CharField(max_length=200)
+
+	def __str__(self):
+		return self.unidad+" "+self.adelanto+" - "+self.nombre
+
 	def __unicode__(self):
-		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
+		return self.unidad+" "+self.adelanto+" - "+self.nombre
+
+class Logro(models.Model):
+	a = (('LO','Lobato/Lobezna'),('HF','Huella Fresca'),
+				('HA','Huella Alerta'),('HG','Huella Agil'),
+				('HL','Huella Libre'),('LS','Lobo Saltarin'),
+				('NO','Novicio'),('AV','Aventurero'),
+				('EX','Explorador'),('PI','Pionero'),
+				('SB','Scout de Bolivar'),('NV','Novato'),
+				('PR','Precursor'),('EP','Expedicionario'),
+				('DE','Descubridor'),('FU','Fundador'),('RC','Rover Ciudadano'))
+	unidades = (
+    ('M','Manada'), ('T','Tropa'),  ('C','Clan'), ('G','Grupo')) 
+	dnis = models.IntegerField(default=0)
+	prueba = models.ForeignKey('Prueba')
+
+	def __str__(self):
+		return str(self.dnis)+" - "+str(self.prueba.pk)
+
+def __str__(self):
+		return unicode(self.dnis)+" - "+unicode(self.prueba.pk)

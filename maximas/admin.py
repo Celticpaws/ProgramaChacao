@@ -36,6 +36,18 @@ class ParticipanteAdmin(ImportExportMixin, admin.ModelAdmin):
     list_filter = ['primer_apellido', 'numero']
     resource_class = ParticipanteResource
 
+class PruebaResource(ModelResource):
+
+    class Meta:
+        model = Prueba
+
+    def for_delete(self, row, instance):
+        return self.fields['id'].clean(row) == ''
+
+
+class PruebaAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_filter = ['nombre', 'unidad']
+    resource_class = PruebaResource
 
 
 
@@ -46,6 +58,9 @@ admin.site.register(Joven, JovenAdmin)
 admin.site.register(Adulto, AdultoAdmin)
 admin.site.register(Grupo)
 admin.site.register(Evento)
+admin.site.register(Condecoraciones)
 admin.site.register(CIP)
 admin.site.register(Certificado)
+admin.site.register(Logro)
 admin.site.register(Participante,ParticipanteAdmin)
+admin.site.register(Prueba,PruebaAdmin)

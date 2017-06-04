@@ -74,7 +74,7 @@ def login(request, method='POST'):
 	form = RegisterForm()
 	if request.user.is_authenticated():
 		g = Grupo.objects.get(usuario=request.user).grupo
-		return redirect(g+"/metas/")
+		return redirect(g+"/metas/MM")
 	elif request.method == 'POST':
 		username = request.POST.get('username', '')
 		password = request.POST.get('password', '')
@@ -82,7 +82,7 @@ def login(request, method='POST'):
 		if user is not None and user.is_active:
 			auth.login(request, user)
 			g = Grupo.objects.get(usuario=user).grupo
-			return redirect(g+"/metas/")
+			return redirect(g+"/metas/MM")
 		else:
 			return render(request, "login.html", {})
 	else:
@@ -90,15 +90,22 @@ def login(request, method='POST'):
 
 @login_required(login_url ='/')
 def cuadrosmetasunidad(request,grupo,unidad):
-	g = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
-	grupo =  definegrupo(grupo)
-	if (grupo == g):
-		u = defineunidad(unidad)
+	g =  definegrupo(grupo)
+	unidades = Joven.objects.filter(grupo=g).values_list("unidad",flat=True).distinct().order_by('unidad')
+	u = []
+	for x in unidades:
+		print (undefineunidad(x))
+		u.append(undefineunidad(x))
+	unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	if (gru == g):
+		gr = definegrupo(grupo)
+		un = defineunidad(unidad)
 		try:
 			ano = int(request.GET['a'])
 		except:
 			ano = datetime.today().year
-		jovenes = Joven.objects.filter(grupo=grupo,unidad=u)
+		jovenes = Joven.objects.filter(grupo=gr,unidad=un)
 		hoy = datetime.today().replace(year=ano)
 		iniano = hoy.replace(month=1,day=1)
 		finano = hoy.replace(month=12,day=31)
@@ -230,75 +237,23 @@ def cuadrosmetasunidad(request,grupo,unidad):
 				fechas.append([nacimiento,egreso])
 			adelantos.append(fec)
 		return render(request, 'cuadrometasunidad.html', 
-			{'jovenes':zip(jovenes,edades,porcentajes,fechas,adelantos),'hoy':hoy,'futuro':futuro,'g':grupo,'u':u,'unidad':unidad})
-	else:
-		return render(request, '404.html', {})
-
-@login_required(login_url ='/')
-def cuadrosmetas(request,grupo):
-	g =  definegrupo(grupo)
-	grupo = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
-
-	if (grupo == g):
-		unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
-		u = []
-		for x in unidades:
-			u.append(undefineunidad(x['unidad']))
-		adelantos =['Cachorro','Huella Fresca','Huella Alerta','Huella Agil','Huella Libre','Lobo Saltarin','Novicio','Aventurero','Explorador','Pionero','Scout de Bolivar','Novato','Precursor','Expedicionario','Descubridor','Fundador','Rover Ciudadano']
-		can = []
-		for a in adelantos:
-			can.append(Joven.objects.filter(adelanto=a,grupo=g).count())
-		resumen= zip(adelantos,can)
-		return render(request, 'cuadrometasgrupo.html', 
-			{'resumen':resumen,'unidades':zip(unidades,u),'g':grupo,'grupo':g})
-	else:
-		return render(request, '404.html', {})
-
-@login_required(login_url ='/')
-def cipgrupo(request,grupo):
-	g =  definegrupo(grupo)
-	grupo = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
-
-	if (grupo == g):
-		unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
-		u = []
-		for x in unidades:
-			u.append(undefineunidad(x['unidad']))
-		manada = CIP.objects.filter(unidad='M').order_by('nivel')
-		tropa = CIP.objects.filter(unidad='T').order_by('nivel')
-		clan = CIP.objects.filter(unidad='C').order_by('nivel')
-		general = CIP.objects.filter(unidad='G').order_by('nivel')
-		
-		jovenesmanada = Joven.objects.values_list('pk',flat=True).filter(grupo=g,unidad__in=['Manada Masculina','Manada Femenina'])
-		jovenestropa = Joven.objects.values_list('pk',flat=True).filter(grupo=g,unidad__in=['Tropa Masculina','Tropa Femenina'])
-		jovenesclan = Joven.objects.values_list('pk',flat=True).filter(grupo=g,unidad__in=['Clan Masculino','Clan Femenino'])
-		jovenesgeneral = Joven.objects.values_list('pk',flat=True).filter(grupo=g)
-
-		listmanada=[]
-		for x in manada:
-			listmanada.append(Participante.objects.filter(dnis__in=jovenesmanada,evento=x.nombre).count())
-		listtropa=[]
-		for x in tropa:
-			listtropa.append(Participante.objects.filter(dnis__in=jovenestropa,evento=x.nombre).count())
-		listclan=[]
-		for x in clan:
-			listclan.append(Participante.objects.filter(dnis__in=jovenesclan,evento=x.nombre).count())
-		listgeneral=[]
-		for x in general:
-			listgeneral.append(Participante.objects.filter(dnis__in=jovenesgeneral,evento=x.nombre).count())
-		return render(request, 'cipgrupo.html', 
-			{'unidades':zip(unidades,u),'g':grupo,'grupo':g,'manada':zip(manada,listmanada),'tropa':zip(tropa,listtropa),'clan':zip(clan,listclan),'general':zip(general,listgeneral),})
+			{'unidades':zip(unidades,u),'jovenes':zip(jovenes,edades,porcentajes,fechas,adelantos),'gru':grupo,'g':gr,'u':un,'hoy':hoy,'futuro':futuro,'g':grupo,'unidad':unidad})
 	else:
 		return render(request, '404.html', {})
 
 @login_required(login_url ='/')
 def cipunidad(request,grupo,unidad):
 	g =  definegrupo(grupo)
+	unidades = Joven.objects.filter(grupo=g).values_list("unidad",flat=True).distinct().order_by('unidad')
+	u = []
+	for x in unidades:
+		u.append(undefineunidad(x))
+	unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
 	if (gru == g):
 		gr = definegrupo(grupo)
-		u = defineunidad(unidad)
-		jovenes = Joven.objects.filter(grupo=gr,unidad=u)
+		un = defineunidad(unidad)
+		jovenes = Joven.objects.filter(grupo=gr,unidad=un)
 		if unidad == "MM" or unidad == "MF":
 			grupal = CIP.objects.filter(unidad='G') 
 			distrital = CIP.objects.filter(unidad='M',nivel ="Distrital")
@@ -314,9 +269,13 @@ def cipunidad(request,grupo,unidad):
 			distrital = CIP.objects.filter(unidad='C',nivel ="Distrital")
 			regional = CIP.objects.filter(unidad='C',nivel ="Regional")
 			nacional = CIP.objects.filter(unidad='C',nivel ="Nacional")
-		listado = []
+		listadog = []
+		listadod = []
+		listadorn = []
 		for j in jovenes:
 			listagrupo = []
+			listadistrito=[]
+			listaregnac=[]
 			for g in grupal:
 				try:
 					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
@@ -328,27 +287,165 @@ def cipunidad(request,grupo,unidad):
 				try:
 					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
 					e = Certificado.objects.get(razon=p.evento)
-					listagrupo.append([p.numero,e.codigo])
+					listadistrito.append([p.numero,e.codigo])
 				except:
-					listagrupo.append([0,0])
+					listadistrito.append([0,0])
 			for g in regional:
 				try:
 					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
 					e = Certificado.objects.get(razon=p.evento)
-					listagrupo.append([p.numero,e.codigo])
+					listaregnac.append([p.numero,e.codigo])
 				except:
-					listagrupo.append([0,0])
+					listaregnac.append([0,0])
 			for g in nacional:
 				try:
 					p = Participante.objects.get(evento=g.nombre,dnis=j.id)
 					e = Certificado.objects.get(razon=p.evento)
-					listagrupo.append([p.numero,e.codigo])
+					listaregnac.append([p.numero,e.codigo])
 				except:
-					listagrupo.append([0,0])
-			listado.append(listagrupo)
-		return render(request,'cipunidad.html',{'g':gr,'u':u,'jovenes':zip(jovenes,listado),'grupal':grupal,'distrital':distrital,'regional':regional,'nacional':nacional})
+					listaregnac.append([0,0])
+			listadog.append(listagrupo)
+			listadod.append(listadistrito)
+			listadorn.append(listaregnac)
+		return render(request,'cipunidad.html',{'unidades':zip(unidades,u),'gru':grupo,'g':gr,'u':un,'pgrupal':zip(jovenes,listadog),'pdistrital':zip(jovenes,listadod),'pregnac':zip(jovenes,listadorn),'grupal':grupal,'distrital':distrital,'regional':regional,'nacional':nacional})
 	else:
 		return render(request, '404.html', {})
+
+@login_required(login_url ='/')
+def condecoracionesunidad(request,grupo,unidad):
+	g =  definegrupo(grupo)
+	unidades = Joven.objects.filter(grupo=g).values_list("unidad",flat=True).distinct().order_by('unidad')
+	u = []
+	for x in unidades:
+		u.append(undefineunidad(x))
+	unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	if (gru == g):
+		gr = definegrupo(grupo)
+		un = defineunidad(unidad)
+		jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+		nudos = []
+		barras = []
+		merito = []
+		jo = []
+		for j in jovenes:
+			jo.append([j.id,j.primer_nombre+" "+j.primer_apellido])
+			listanudos = []
+			listabarras = []
+			listamerito = []
+			anos = [2,6,8]
+			con = ['NPB','NPP','NPO']
+			try:
+				ingreso = datetime.strptime(j.f_promesa, '%d/%m/%Y')
+				print (j)
+			except:
+				ingreso = datetime.today()
+			for i,c in enumerate(anos):
+				print(con[i])
+				try:
+					condecoracion = [1,Condecoraciones.objects.get(dnis=int(j.id),condecoracion=con[i])]
+				except:
+					if ingreso+timedelta(days=365*c) < datetime.today():
+						condecoracion = [0,ingreso+timedelta(days=365*c)]
+					else:
+						condecoracion = [-1,ingreso+timedelta(days=365*c)]
+				print(condecoracion)
+				listanudos.append(condecoracion)
+			nudos.append(listanudos)
+			anos = [4,8,0]
+			con = ['BESP','BESO','BV']
+			try:
+				ingreso = datetime.strptime(j.f_promesa, '%d/%m/%Y')
+				print (j)
+			except:
+				ingreso = datetime.today()
+			for i,c in enumerate(anos):
+				print(con[i])
+				try:
+					condecoracion = [1,Condecoraciones.objects.get(dnis=int(j.id),condecoracion=con[i])]
+				except:
+					if con[i] != "BV" :
+						if ingreso+timedelta(days=365*c) < datetime.today():
+							condecoracion = [0,ingreso+timedelta(days=365*c)]
+						else:
+							condecoracion = [-1,ingreso+timedelta(days=365*c)]
+					else:
+						condecoracion = [-1,0]
+				print(condecoracion)
+				listabarras.append(condecoracion)
+			barras.append(listabarras)
+			conesp=['OM1','OM2','OSJ']
+			for i in conesp:	
+				try:
+					condecoracion = [1,Condecoraciones.objects.get(dnis=int(j.id),condecoracion=i)]
+				except:
+					condecoracion = [-1,0]
+				listamerito.append(condecoracion)
+			merito.append(listamerito)
+		hoy = datetime.now()
+		print(u)
+		return render(request,'condecoracionesunidad.html',{'unidades':zip(unidades,u),'gru':grupo,'g':gr,'u':un,'nudos':zip(jo,nudos),'barras':zip(jo,barras),'merito':zip(jo,merito),'hoy':hoy})
+	else:
+		return render(request, '404.html', {})
+
+
+@login_required(login_url ='/')
+def adelantounidad(request,grupo,unidad):
+	g =  definegrupo(grupo)
+	unidades = Joven.objects.filter(grupo=g).values_list("unidad",flat=True).distinct().order_by('unidad')
+	u = []
+	for x in unidades:
+		u.append(undefineunidad(x))
+	unidades = Joven.objects.filter(grupo=g).values("unidad").distinct().order_by('unidad')
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	if unidad == 'MM':
+		adelantos = ['Lobato','Huella Fresca','Huella Alerta','Huellas Agil','Huella Libre','Lobo Saltarin']
+	elif unidad == 'MF':
+		adelantos = ['Lobezna','Huella Fresca','Huella Alerta','Huellas Agil','Huella Libre','Lobo Saltarin']
+	if (gru == g):
+		gr = definegrupo(grupo)
+		un = defineunidad(unidad)
+		jovenes = Joven.objects.filter(grupo=g,unidad=un)
+		plobato = Prueba.objects.filter(unidad='M',adelanto='LO')
+		pfresca = Prueba.objects.filter(unidad='M',adelanto='FR')
+		palerta = Prueba.objects.filter(unidad='M',adelanto='AL')
+		pagil = Prueba.objects.filter(unidad='M',adelanto='AG')
+		plibre = Prueba.objects.filter(unidad='M',adelanto='LI')
+		plobo = Prueba.objects.filter(unidad='M',adelanto='LS')
+		pruebas = [plobato,pfresca,palerta,pagil,plibre,plobo]
+		aprobados=[]
+		for i,p in enumerate(adelantos):
+			aproba=[]
+			for j in jovenes:
+				apro =[]
+				for pr in pruebas[i]:
+					apro.append([j.id,pr.id,Logro.objects.filter(dnis=j.id,prueba=pr).exists()])
+				aproba.append(apro)
+			aprobados.append(zip(jovenes,aproba))
+		print(aprobados)
+
+		pruebas = zip(adelantos,pruebas,aprobados)
+		return render(request, 'adelantomanada.html', 
+			{'unidad':unidad,'unidades':zip(unidades,u),'gru':grupo,'g':gr,'u':un,'pruebas':pruebas,'jovenes':jovenes})
+	else:
+		return render(request, '404.html', {})
+
+@login_required(login_url ='/')
+def modificaradelantoajax(request):
+	# try:
+	j = int(request.GET['dnis'])
+	pr = int(request.GET['p'])
+	prueba = Prueba.objects.get(pk=pr)
+	if Logro.objects.filter(dnis=j,prueba=prueba).exists():
+		logro = Logro.objects.get(dnis=j,prueba=prueba)
+		logro.delete()
+		resultado = -1
+	else:
+		logro = Logro.objects.create(dnis=j,prueba=prueba)
+		resultado = 1
+	# except:
+	# 	resultado = 0
+	return HttpResponse(json.dumps(resultado),content_type='application/json')	
 
 def certificados(request,codigo):
 	certificado = Certificado.objects.get(codigo=codigo)
