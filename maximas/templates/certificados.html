@@ -9,9 +9,9 @@
   <title>PROGRAMA DE JOVENES - CHACAO </title>
 	
 	<!-- Styles -->
-	<link rel='stylesheet' href='/static/css/bootstrap.min.css'>
-	<link rel='stylesheet' href='/static/css/animate.min.css'>
-	<link rel='stylesheet' href="/static/css/font-awesome.min.css"/>
+	<link rel='stylesheet' href='/static/css/bootstrap.min2.css'>
+	<link rel='stylesheet' href='/static/css/animate.min2.css'>
+	<link rel='stylesheet' href="/static/css/font-awesome-min.css"/>
 	<link rel='stylesheet' href="/static/css/style.css"/>
 	
 	<!-- Fonts -->
@@ -82,7 +82,7 @@
 					<tr id="r{{forloop.counter}}">
 					<td class="text-center">{{j.numero}}</td>
 					<td class="text-left" style="text-transform: uppercase"><strong id="n{{forloop.counter}}">{{j.primer_nombre}} {{j.segundo_nombre}} {{j.primer_apellido}} {{j.segundo_apellido}}</strong></td>
-					<td class="text-left"><a href="/certificados/{{evento.certificado.codigo}}/{{j.numero}}"><span class="fa fa-download" style="font-size:2em"></span></a></td>
+					<td class="text-left"><a href="/certificados/{{evento.certificado.codigo}}/{{j.numero}}"><i class="fa fa-download" style="font-size:2em">Descargar</i></a></td>
 					</tr>
 				{% endfor %}
 				</tbody>
