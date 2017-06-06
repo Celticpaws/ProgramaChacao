@@ -256,7 +256,7 @@ def cuadrosmetas(request,grupo):
 			print(str(adelantos)+"\n")
 			print(str(x)+"\n\n\n\n\n")
 			jovenestotal.append([zip(jovenes,edades,porcentajes,fechas,adelantos),x,un])
-		return render(request, 'cuadrometasunidad.html', 
+		return render(request, 'cuadrometas.html', 
 			{'unidades':zip(unidades,u),'jovenestotal':jovenestotal,'gru':grupo,'g':gr,'hoy':hoy,'futuro':futuro,'g':grupo})
 	else:
 		return render(request, '404.html', {})
