@@ -249,12 +249,6 @@ def cuadrosmetas(request,grupo):
 					porcentajes.append(p)
 					fechas.append([nacimiento,egreso])
 				adelantos.append(fec)
-			print(str(jovenes)+"\n")
-			print(str(edades)+"\n")
-			print(str(porcentajes)+"\n")
-			print(str(fechas)+"\n")
-			print(str(adelantos)+"\n")
-			print(str(x)+"\n\n\n\n\n")
 			jovenestotal.append([zip(jovenes,edades,porcentajes,fechas,adelantos),x,un])
 		return render(request, 'cuadrometas.html', 
 			{'unidades':zip(unidades,u),'jovenestotal':jovenestotal,'gru':grupo,'g':gr,'hoy':hoy,'futuro':futuro,'g':grupo})
@@ -293,7 +287,6 @@ def cip(request,grupo):
 			un = defineunidad(x)
 			unidades.append(defineunidad(x))
 			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
-			print(x+"\n"+str(jovenes)+"\n\n")
 			if x == "MM" or x == "MF":
 				grupal = CIP.objects.filter(unidad='G') 
 				distrital = CIP.objects.filter(unidad='M',nivel ="Distrital")
@@ -398,11 +391,9 @@ def condecoraciones(request,grupo):
 				con = ['NPB','NPP','NPO']
 				try:
 					ingreso = datetime.strptime(j.f_promesa, '%d/%m/%Y')
-					print (j)
 				except:
 					ingreso = datetime.today()
 				for i,c in enumerate(anos):
-					print(con[i])
 					try:
 						condecoracion = [1,Condecoraciones.objects.get(dnis=int(j.id),condecoracion=con[i])]
 					except:
@@ -410,18 +401,15 @@ def condecoraciones(request,grupo):
 							condecoracion = [0,ingreso+timedelta(days=365*c)]
 						else:
 							condecoracion = [-1,ingreso+timedelta(days=365*c)]
-					print(condecoracion)
 					listanudos.append(condecoracion)
 				nudos.append(listanudos)
 				anos = [4,8,0]
 				con = ['BESP','BESO','BV']
 				try:
 					ingreso = datetime.strptime(j.f_promesa, '%d/%m/%Y')
-					print (j)
 				except:
 					ingreso = datetime.today()
 				for i,c in enumerate(anos):
-					print(con[i])
 					try:
 						condecoracion = [1,Condecoraciones.objects.get(dnis=int(j.id),condecoracion=con[i])]
 					except:
@@ -432,7 +420,6 @@ def condecoraciones(request,grupo):
 								condecoracion = [-1,ingreso+timedelta(days=365*c)]
 						else:
 							condecoracion = [-1,0]
-					print(condecoracion)
 					listabarras.append(condecoracion)
 				barras.append(listabarras)
 				conesp=['OM1','OM2','OSJ']
@@ -571,8 +558,6 @@ def adelantos(request,grupo):
 				pruebas = zip(adelantos,pruebas,aprobados)
 				pruebastotal.append(pruebas)
 		total = zip(unidades,u,pruebastotal,jovenestotal)
-		for x in total:
-			print(str(x)+"\n\n\n\n")
 		return render(request, 'adelantos.html', 
 				{'total':total,'gru':grupo,'g':gr,})
 	else:
