@@ -35,18 +35,18 @@
               </div>
           </div>
           <div class="clearfix"></div>
-
+{% for jovenes,unidad,u in jovenestotal%}
     <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
                     <h2><i class="fa fa-bars"></i> Cuadro de Metas de {{u}}</h2>
                     <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      <li><a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
+                  <div class="x_content" style="display:none">
 
 
                     <div class="" role="tabpanel" data-example-id="togglable-tabs">
@@ -74,18 +74,18 @@
 				<th style="width:10%" class="text-left eliminar">Fecha Nacim.</th>
 				<th style="width:10%" class="text-left eliminar">Fecha Egreso</th>
 				<th class="text-left eliminar">Adelanto</th>
-				<th class="text-left">E</th>
-				<th class="text-left">F</th>
-				<th class="text-left">M</th>
-				<th class="text-left">A</th>
-				<th class="text-left">M</th>
-				<th class="text-left">J</th>
-				<th class="text-left">J</th>
-				<th class="text-left">A</th>
-				<th class="text-left">S</th>
-				<th class="text-left">O</th>
-				<th class="text-left">N</th>
-				<th class="text-left">D</th>
+				<th class="text-left">Ene</th>
+				<th class="text-left">Feb</th>
+				<th class="text-left">Mar</th>
+				<th class="text-left">Abr</th>
+				<th class="text-left">May</th>
+				<th class="text-left">Jun</th>
+				<th class="text-left">Jul</th>
+				<th class="text-left">Ago</th>
+				<th class="text-left">Sep</th>
+				<th class="text-left">Oct</th>
+				<th class="text-left">Nov</th>
+				<th class="text-left">Dic</th>
 				</tr>
 				</thead>
 				<tbody class="table-hover">
@@ -205,9 +205,8 @@
                   </div>
                 </div>
               </div>
+{% endfor %}
         </div>
-
-
       </div>
       <!-- /page content -->
 

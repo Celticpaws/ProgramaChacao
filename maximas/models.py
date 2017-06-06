@@ -179,3 +179,15 @@ class Logro(models.Model):
 
 def __str__(self):
 		return unicode(self.dnis)+" - "+unicode(self.prueba.pk)
+
+class PermisoUnidad(models.Model):
+	usuario = models.ForeignKey('auth.User')
+	manada_masculina = models.BooleanField(default=False)
+	manada_femenina = models.BooleanField(default=False)
+	tropa_masculina = models.BooleanField(default=False)
+	tropa_femenina = models.BooleanField(default=False)
+	clan_masculina = models.BooleanField(default=False)
+	clan_femenina = models.BooleanField(default=False)
+
+def __str__(self):
+		return str(usuario)

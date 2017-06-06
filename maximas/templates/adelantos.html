@@ -15,7 +15,7 @@
               	  {% if u == "Manada Masculina" or u == "Manada Femenina" %}
                   <span class='label label-warning'>
                   {% elif u == "Clan Masculino" or u == "Clan Femenino" %}
-                  <span class='label label-alert'>
+                  <span class='label label-danger'>
                   {% else %}
                   <span class='label label-success'>
               	  {% endif %}
@@ -51,42 +51,65 @@
         </div>
     </div>
 
+{% for u,unidad,pruebas,jovenes in total %}
     <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
                     <h2><i class="fa fa-check-square-o"></i> Cuadro de Adelanto de {{u}}</h2>
                     <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      <li><a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
+                  <div class="x_content" style="display:none">
 
 
                     <div class="" role="tabpanel" data-example-id="togglable-tabs">
                       <ul style="height: initial;" id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                         
-                        <li role="presentation" class="active"><a  href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{%if u == "Manada Masculina" %}Lobato{%else%}Lobezna{%endif%}</a>
+                         {% if u == "Manada Masculina" or u == "Manada Femenina" %}
+                        <li role="presentation" class="active"><a  href="#tab_content{{forloop.counter}}1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{%if u == "Manada Masculina" %}Lobato{%else%}Lobezna{%endif%}</a>
                         </li>
-                        <li role="presentation" class=" "><a  href="#tab_content2" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Huella Fresca</a>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}2" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Huella Fresca</a>
                         </li>
-                        <li role="presentation" class=" "><a  href="#tab_content3" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}3" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">
                         Huella Alerta
                         </a>
                         </li>
-                        <li role="presentation" class=" "><a  href="#tab_content4" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Huella Ágil</a>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}4" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Huella Ágil</a>
                         </li>
-                        <li role="presentation" class=" "><a  href="#tab_content5" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Huella Libre</a>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}5" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Huella Libre</a>
                         </li>
-                        <li role="presentation" class=" "><a  href="#tab_content6" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Lobo Saltarín</a>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}6" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Lobo Saltarín</a>
                         </li>
+                        {% elif u == "Clan Masculino" or u == "Clan Femenino" %}
+ 						<li role="presentation" class="active"><a  href="#tab_content{{forloop.counter}}1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Precursor</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}2" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Servicio Social y Comunidad</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}3" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Vida al Aire Libre</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}4" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Desarrollo Personal</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}5" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Actividades Propias</a>
+                        </li>
+                        {% else %}
+                        <li role="presentation" class="active"><a  href="#tab_content{{forloop.counter}}1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Aventurero</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}2" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Explorador</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}3" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Pionero</a>
+                        </li>
+                        <li role="presentation" class=" "><a  href="#tab_content{{forloop.counter}}4" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Scout de Bolivar</a>
+                        </li>
+                        {% endif %}
+
                       </ul>
-                      </div>
-                                     
+                      </div>             
 	            <div id="myTabContent" class="tab-content">         
-	            {%for adelanto,prueba,aprobados in pruebas %}  
-	                  <div role="tabpanel" class="tab-pane fade {%if forloop.counter == 1%} active in {% endif %}" id="tab_content{{forloop.counter}}" aria-labelledby="home-tab">
+	            {%for adelanto,prueba,aprobados in pruebas %}
+	                  <div role="tabpanel" class="tab-pane fade {%if forloop.counter == 1%} active in {% endif %}" id="tab_content{{forloop.parentloop.counter}}{{forloop.counter}}" aria-labelledby="home-tab">
 							<div class="table-responsive">
 								
 								<table class="table-fill table table-striped jambo_table bulk_action">
@@ -101,9 +124,21 @@
 										<th style="border-color:#b57602;background-color: #f3a517;" class="text-center" onclick="descripcion('{{p.id}}')" ><span id="pr{{p.id}}"> {{p.nombre}} <span id="de{{p.id}}" style="display:none">{{p.descripcion}}</span></span></th>
 									{% endfor %}
 								{% elif u == "Clan Masculino" or u == "Clan Femenino" %}
-
+									<th style="background-color: #c02126;border-color: #610e10;" colspan={{prueba|length|add:2}}><h1>{{adelanto}}</h1></th></tr>
+									<tr>
+									<th style="width:20px;background-color: #c02126;border-color: #610e10;" class="text-left">DNIS</th>
+									<th style="background-color: #c02126;border-color: #610e10;" class="text-left">Nombre</th>
+									{% for p in prueba %}
+										<th style="background-color: #c02126;border-color: #610e10;" class="text-center" onclick="descripcion('{{p.id}}')" ><span id="pr{{p.id}}"> {{p.nombre}} <span id="de{{p.id}}" style="display:none">{{p.descripcion}}</span></span></th>
+									{% endfor %}
 								{% else %}
-
+									<th style="background-color: #5cb85c;border-color: #42ad48;" colspan={{prueba|length|add:2}}><h1>{{adelanto}}</h1></th></tr>
+									<tr>
+									<th style="width:20px;background-color: #5cb85c;border-color: #42ad48;" class="text-left">DNIS</th>
+									<th style="background-color: #5cb85c;border-color: #42ad48;" class="text-left">Nombre</th>
+									{% for p in prueba %}
+										<th style="background-color: #5cb85c;border-color: #42ad48;" class="text-center" onclick="descripcion('{{p.id}}')" ><span id="pr{{p.id}}"> {{p.nombre}} <span id="de{{p.id}}" style="display:none">{{p.descripcion}}</span></span></th>
+									{% endfor %}
 								{% endif %}
 
 								</thead>
@@ -132,10 +167,10 @@
                   </div>
                 </div>
               </div>
+{% endfor %}
         </div>
 
-
-      </div>
+</div>
       <!-- /page content -->
 
   <!-- Datatables -->
