@@ -36,6 +36,45 @@ class ParticipanteAdmin(ImportExportMixin, admin.ModelAdmin):
     list_filter = ['primer_apellido', 'numero']
     resource_class = ParticipanteResource
 
+class ParticipanteCIPResource(ModelResource):
+
+    class Meta:
+        model = ParticipanteCIP
+
+    def for_delete(self, row, instance):
+        return self.fields['id'].clean(row) == ''
+
+
+class ParticipanteCIPAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_filter = ['numero']
+    resource_class = ParticipanteCIPResource    
+
+class ParticipanteCursosResource(ModelResource):
+
+    class Meta:
+        model = ParticipanteCursos
+
+    def for_delete(self, row, instance):
+        return self.fields['id'].clean(row) == ''
+
+
+class ParticipanteCursosAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_filter = ['numero']
+    resource_class = ParticipanteCursosResource   
+
+class ParticipantePM(ModelResource):
+
+    class Meta:
+        model = ParticipanteProgramasMundiales
+
+    def for_delete(self, row, instance):
+        return self.fields['id'].clean(row) == ''
+
+
+class ParticipantePMAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_filter = ['numero']
+    resource_class = ParticipantePM 
+
 class PruebaResource(ModelResource):
 
     class Meta:
@@ -64,4 +103,7 @@ admin.site.register(Certificado)
 admin.site.register(Logro)
 admin.site.register(PermisoUnidad)
 admin.site.register(Participante,ParticipanteAdmin)
+admin.site.register(ParticipanteCIP,ParticipanteCIPAdmin)
+admin.site.register(ParticipanteCursos,ParticipanteCursosAdmin)
+admin.site.register(ParticipanteProgramasMundiales,ParticipantePMAdmin)
 admin.site.register(Prueba,PruebaAdmin)

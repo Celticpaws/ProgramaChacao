@@ -132,6 +132,22 @@ class Participante(models.Model):
 	evento = models.CharField(max_length=100)
 	numero = models.CharField(max_length=3)
 
+class ParticipanteCIP(models.Model):
+	dnis = models.IntegerField(default=0)
+	evento = models.CharField(max_length=100)
+	numero = models.CharField(max_length=3)
+
+class ParticipanteCursos(models.Model):
+	dnis = models.IntegerField(default=0)
+	evento = models.CharField(max_length=100)
+	numero = models.CharField(max_length=3)
+
+class ParticipanteProgramasMundiales(models.Model):
+	dnis = models.IntegerField(default=0)
+	evento = models.CharField(max_length=100)
+	numero = models.CharField(max_length=5)
+	fecha = models.DateField(blank=True,null=True)
+
 def __str__(self):
 		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
 
@@ -177,11 +193,12 @@ class Logro(models.Model):
 	def __str__(self):
 		return str(self.dnis)+" - "+str(self.prueba.pk)
 
-def __str__(self):
-		return unicode(self.dnis)+" - "+unicode(self.prueba.pk)
+	def __unicode__(self):
+			return unicode(self.dnis)+" - "+unicode(self.prueba.pk)
 
 class PermisoUnidad(models.Model):
 	usuario = models.ForeignKey('auth.User')
+	imagen = models.CharField(max_length=6,default="PLE-MM")
 	manada_masculina = models.BooleanField(default=False)
 	manada_femenina = models.BooleanField(default=False)
 	tropa_masculina = models.BooleanField(default=False)
@@ -189,5 +206,5 @@ class PermisoUnidad(models.Model):
 	clan_masculina = models.BooleanField(default=False)
 	clan_femenina = models.BooleanField(default=False)
 
-def __str__(self):
-		return str(usuario)
+	def __str__(self):
+			return str(self.usuario)

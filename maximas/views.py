@@ -251,7 +251,7 @@ def cuadrosmetas(request,grupo):
 				adelantos.append(fec)
 			jovenestotal.append([zip(jovenes,edades,porcentajes,fechas,adelantos),x,un])
 		return render(request, 'cuadrometas.html', 
-			{'unidades':zip(unidades,u),'jovenestotal':jovenestotal,'gru':grupo,'g':gr,'hoy':hoy,'futuro':futuro,'g':grupo})
+			{'fotoperfil':permisos.imagen,'unidades':zip(unidades,u),'jovenestotal':jovenestotal,'gru':grupo,'g':gr,'hoy':hoy,'futuro':futuro,'g':grupo})
 	else:
 		return render(request, '404.html', {})
 
@@ -311,28 +311,28 @@ def cip(request,grupo):
 				listaregnac=[]
 				for g in grupal:
 					try:
-						p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+						p = ParticipanteCIP.objects.get(evento=g.nombre,dnis=j.id)
 						e = Certificado.objects.get(razon=p.evento)
 						listagrupo.append([p.numero,e.codigo])
 					except:
 						listagrupo.append([0,0])
 				for g in distrital:
 					try:
-						p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+						p = ParticipanteCIP.objects.get(evento=g.nombre,dnis=j.id)
 						e = Certificado.objects.get(razon=p.evento)
 						listadistrito.append([p.numero,e.codigo])
 					except:
 						listadistrito.append([0,0])
 				for g in regional:
 					try:
-						p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+						p = ParticipanteCIP.objects.get(evento=g.nombre,dnis=j.id)
 						e = Certificado.objects.get(razon=p.evento)
 						listaregnac.append([p.numero,e.codigo])
 					except:
 						listaregnac.append([0,0])
 				for g in nacional:
 					try:
-						p = Participante.objects.get(evento=g.nombre,dnis=j.id)
+						p = ParticipanteCIP.objects.get(evento=g.nombre,dnis=j.id)
 						e = Certificado.objects.get(razon=p.evento)
 						listaregnac.append([p.numero,e.codigo])
 					except:
@@ -347,7 +347,7 @@ def cip(request,grupo):
 			distritaltotal.append(distrital)
 			regionaltotal.append(regional)
 			nacionaltotal.append(nacional)
-		return render(request,'cip.html',{'gru':grupo,'g':gr,'cips':zip(unidades,grupaltotal,distritaltotal,regionaltotal,nacionaltotal,listadogtotal,listadodtotal,listadorntotal)})
+		return render(request,'cip.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'cips':zip(unidades,grupaltotal,distritaltotal,regionaltotal,nacionaltotal,listadogtotal,listadodtotal,listadorntotal)})
 	else:
 		return render(request, '404.html', {})
 
@@ -434,7 +434,7 @@ def condecoraciones(request,grupo):
 			barrastotal.append(zip(jo,barras))
 			meritototal.append(zip(jo,merito))
 		hoy = datetime.now()
-		return render(request,'condecoraciones.html',{'gru':grupo,'g':g,'u':u,'condecoraciones':zip(unidades,nudostotal,barrastotal,meritototal),'hoy':hoy})
+		return render(request,'condecoraciones.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':g,'u':u,'condecoraciones':zip(unidades,nudostotal,barrastotal,meritototal),'hoy':hoy})
 	else:
 		return render(request, '404.html', {})
 
@@ -559,7 +559,7 @@ def adelantos(request,grupo):
 				pruebastotal.append(pruebas)
 		total = zip(unidades,u,pruebastotal,jovenestotal)
 		return render(request, 'adelantos.html', 
-				{'total':total,'gru':grupo,'g':gr,})
+				{'fotoperfil':permisos.imagen,'total':total,'gru':grupo,'g':gr,})
 	else:
 		return render(request, '404.html', {})
 
@@ -608,3 +608,135 @@ def certificadoindividual(request,evento,nombre):
     p.showPage()
     p.save()
     return response
+
+def certificadomop(request,codigo):
+    evento = Certificado.objects.get(razon="Programa Mensajeros de Paz")
+    participante = ParticipanteProgramasMundiales.objects.get(numero=codigo)
+    joven = Joven.objects.get(pk=participante.dnis)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = "filename='"+evento.codigo+"-"+participante.numero+".pdf'"
+    
+    logo = ImageReader("/home/programachacao/ProgramaChacao/maximas/static/certificados/mop-"+str(participante.fecha.year)+".jpg")
+    
+    p = canvas.Canvas(response)
+    p.setPageSize((594, 792))
+    w, h = (594,792)
+    p.drawImage(logo, 0,0,width=w,height=h) 
+    p.setFillColorRGB(0.3,0.3,0.3)
+    p.setFont("Helvetica-Bold",20)
+    p.drawCentredString(w/2+15, h/2-45, joven.primer_nombre.capitalize()+" "+joven.segundo_nombre.replace(" ","").capitalize()+" "+joven.primer_apellido.capitalize()+" "+joven.segundo_apellido.capitalize())
+    p.setFont("Helvetica-Bold",12)
+    p.drawCentredString(w/2+15, h/2-60, "C.I. "+str(joven.cedula))
+    p.setFillColorRGB(1,1,1)
+    p.setFont("Helvetica-Bold",9)
+    p.drawString(w/2-292, h/2-382, evento.codigo+participante.numero+"-"+str(participante.fecha.year))
+    mes = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+    p.drawString(w/2-292, h/2-392, "Caracas "+str(participante.fecha.day)+" de "+mes[participante.fecha.month-1]+" de "+str(participante.fecha.year))
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+    return response
+
+@login_required(login_url ='/')
+def cursos(request,grupo):
+	g =  definegrupo(grupo)
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	u = []
+	if permisos.manada_masculina:
+		u.append('MM')
+	if permisos.manada_femenina:
+		u.append('MF')
+	if permisos.tropa_masculina:
+		u.append('TM')
+	if permisos.tropa_femenina:
+		u.append('TF')
+	if permisos.clan_masculina:
+		u.append('CM')
+	if permisos.clan_femenina:
+		u.append('CF')
+	unidades = []
+	cursostotal = []
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	gr = definegrupo(grupo)
+	listaunidad = []
+	if (gru == g):
+		for x in u:
+			un = defineunidad(x)
+			unidades.append(defineunidad(x))
+			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+			if x == "TM" or x == "TF":
+				cursos = ['Punta de Flecha en Bronce','Punta de Flecha en Plata','Punta de Flecha en Oro']
+			elif x == "CM" or x == "CF":
+				cursos = ['Horqueta','Remo','Canoa']
+			cursostotal.append(cursos)
+			listajoven = []
+			for j in jovenes:
+				listacursos = []
+				for c in cursos:
+					try:
+						p = ParticipanteCursos.objects.get(evento=c,dnis=j.id)
+						e = Certificado.objects.get(razon=p.evento)
+						listacursos.append([p.numero,e.codigo])
+					except:
+						listacursos.append([0,0])
+				listajoven.append(listacursos)
+			listaunidad.append(zip(jovenes,listajoven))
+		listafinal = (zip(unidades,cursostotal,listaunidad))
+		for x,y,z in listafinal:
+			print(str(x)+"\n")
+			print(str(y)+"\n")
+			print(str(z)+"\n\n\n")
+		return render(request,'cursos.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'cursos':listafinal})
+	else:
+		return render(request, '404.html', {})
+
+@login_required(login_url ='/')
+def programasmundiales(request,grupo):
+	g =  definegrupo(grupo)
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	u = []
+	if permisos.manada_masculina:
+		u.append('MM')
+	if permisos.manada_femenina:
+		u.append('MF')
+	if permisos.tropa_masculina:
+		u.append('TM')
+	if permisos.tropa_femenina:
+		u.append('TF')
+	if permisos.clan_masculina:
+		u.append('CM')
+	if permisos.clan_femenina:
+		u.append('CF')
+	unidades = []
+	cursostotal = []
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	gr = definegrupo(grupo)
+	listaunidad = []
+	if (gru == g):
+		for x in u:
+			un = defineunidad(x)
+			unidades.append(defineunidad(x))
+			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+			cursos = ['Programa Scout Mundial del Ambiente','Programa Mensajeros de Paz']
+			if x == "CM" or x == "CF":
+				cursos.append("Programa Scouts del Mundo")
+			cursostotal.append(cursos)
+			listajoven = []
+			for j in jovenes:
+				listacursos = []
+				for c in cursos:
+					print(c+" "+str(j.id))
+					try:
+						p = ParticipanteProgramasMundiales.objects.get(evento=c,dnis=j.id)
+						e = Certificado.objects.get(razon=c)
+						listacursos.append([p.numero,e.codigo])
+						print(p+" "+e)
+					except:
+						listacursos.append([0,0])
+				listajoven.append(listacursos)
+			listaunidad.append(zip(jovenes,listajoven))
+		listafinal = (zip(unidades,cursostotal,listaunidad))
+		return render(request,'programasmundiales.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'cursos':listafinal})
+	else:
+		return render(request, '404.html', {})

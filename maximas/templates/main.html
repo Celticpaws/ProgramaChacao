@@ -83,7 +83,7 @@
           <!-- menu prile quick info -->
           <div class="profile">
             <div class="profile_pic">
-              <img src="/static/img/iconos-usuario/{{gru}}-MF.png" alt="..." class="img-circle profile_img">
+              <img src="/static/img/iconos-usuario/{{fotoperfil}}.png" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
               <span>Bienvenid@</span>
@@ -107,6 +107,8 @@
                     <li><a href="/{{gru}}/metas"> Cuadro de Metas</a></li> 
                     <li><a href="/{{gru}}/condecoraciones"> Condecoraciones</a></li> 
                     <li><a href="/{{gru}}/cip"> CIP</a></li> 
+                    <li><a href="/{{gru}}/cursos"> Cursos</a></li> 
+                    <li><a href="/{{gru}}/programasmundiales"> Programas Mundiales</a></li> 
                   </ul>
                 </li>
                   </ul>
@@ -157,7 +159,7 @@
             <ul class="nav navbar-nav navbar-right">
               <li class="">
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src="/static/img/iconos-usuario/{{gru}}-MF.png" onError ="this.src='{%static "" %}img/userphoto/noprofile.jpg'" alt="...">{{user.first_name}} {{user.last_name}}
+                  <img src="/static/img/iconos-usuario/{{fotoperfil}}.png" onError ="this.src='{%static "" %}img/userphoto/noprofile.jpg'" alt="...">{{user.first_name}} {{user.last_name}}
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
