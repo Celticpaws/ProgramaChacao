@@ -116,13 +116,9 @@ body.nav-sm .profile {
 }
 
 .img-circle.profile_img {
-    width: 90%;
-    background: #fff;
-    margin-left: 15%;
+   width: 100%;
     z-index: 1000;
     position: inherit;
-    margin-top: 20px;
-   
 
 }
 
@@ -367,7 +363,7 @@ body.nav-md .container.body .right_col {
 }
 
 body {
-    color: #333;
+    color: rgb(49, 16, 80);
     background: #311050;
     /*#ECF0F1; #FCFCFC*/
 
@@ -1208,9 +1204,6 @@ legend {
     font-weight: 300;
 }
 
-.profile_left {
-    background: white;
-}
 /* *********  /contacts  ********************************** */
 /* *********  /custom accordion  **************************** */
 /* *********  dashboard widget  **************************** */
@@ -4482,7 +4475,6 @@ ul.user_data li .progress {
 }
 
 .profile_title {
-    background: #F5F7FA;
     border: 0;
     padding: 7px 0;
     display: flex;
@@ -6398,9 +6390,6 @@ table.scroll tbody {
 
 tbody { border-top: 2px solid black; }
 
-tbody td, thead th {
-    width: 20% /* Optional */
-}
 
 tbody td:last-child, thead th:last-child {
     border-right: none;

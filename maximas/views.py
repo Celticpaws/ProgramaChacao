@@ -27,6 +27,7 @@ import urllib
 import json
 import math
 import sys
+from .certificados import *
 
 def definegrupo(g):
 	if g == "STA":
@@ -41,6 +42,21 @@ def definegrupo(g):
 		return "DON BOSCO"
 	if g == "CAT":
 		return "CATATUMBO"
+
+def undefinegrupo(g):
+	if g == "SANTO TOMAS DE AQUINO":
+		return "STA"
+	if g == "PLEYADES":
+		return "PLE"
+	if g == "RORAIMA":
+		return "ROR"
+	if g == "TIUNA":
+		return "TIU"
+	if g == "DON BOSCO":
+		return "DON"
+	if g == "CATATUMBO":
+		return "CAT"
+
 def defineunidad(unidad):
 	if unidad == "MM":
 		return 'Manada Masculina'
@@ -87,6 +103,52 @@ def login(request, method='POST'):
 			return render(request, "login.html", {})
 	else:
 		return render(request, "login.html", {})
+
+def dnis(request):
+	return render(request, "dnis.html", {})
+
+def perfil(request,dnis,fecha):
+	f = datetime.strptime(fecha,"%Y-%m-%d")
+	print(f)
+	print(dnis)
+	user = Joven.objects.get(pk=dnis)
+	unidad = undefineunidad(user.unidad)
+	grupo = undefinegrupo(user.grupo)
+
+
+	hoy = datetime.today()
+	try:
+		nacimiento = datetime.strptime(user.f_nac, '%d/%m/%Y')
+	except:
+		nacimiento = datetime.today()
+	try:
+		ingreso = datetime.strptime(user.f_promesa, '%d/%m/%Y')
+	except:
+		ingreso = datetime.today()
+	if unidad == "MM" or unidad =="MF":
+		egreso = nacimiento + timedelta(days=4012)
+	elif unidad == "TM" or unidad =="TF":
+		egreso = nacimiento + timedelta(days=5840)
+	elif unidad == "CM" or unidad =="CF":
+		egreso = nacimiento + timedelta(days=7665)
+	lleva= (hoy-ingreso)
+	quedan = (egreso-hoy)
+	vidaenmanada = egreso-ingreso
+	print(vidaenmanada.days)
+	print(lleva.days)
+	if vidaenmanada.days < 0 :
+		vidaenunidad = 100
+	else:
+		vidaenunidad = (float(lleva.days)/float(vidaenmanada.days)*100)
+		print(vidaenunidad)
+	e = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
+	esp = []
+	adelantos = Adelanto.objects.filter(usuario=dnis).order_by('fecha_entrega')			
+	especialidades = Especialidades.objects.filter(dnis=dnis)
+	for es in especialidades:
+		esp.append([es,e[es.tipo]])
+	print(especialidades)
+	return render(request, "perfil.html", {'vidaenunidad':vidaenunidad,'adelantos':adelantos,'especialidades':esp,'user':user,'unidad':unidad,'grupo':grupo})
 
 @login_required(login_url ='/')
 def cuadrosmetas(request,grupo):
@@ -565,78 +627,46 @@ def adelantos(request,grupo):
 
 @login_required(login_url ='/')
 def modificaradelantoajax(request):
+	try:
+		j = int(request.GET['dnis'])
+		pr = int(request.GET['p'])
+		prueba = Prueba.objects.get(pk=pr)
+		if Logro.objects.filter(dnis=j,prueba=prueba).exists():
+			logro = Logro.objects.get(dnis=j,prueba=prueba)
+			logro.delete()
+			resultado = -1
+		else:
+			logro = Logro.objects.create(dnis=j,prueba=prueba)
+			resultado = 1
+	except:
+		resultado = 0
+	return HttpResponse(json.dumps(resultado),content_type='application/json')	
+
+@login_required(login_url ='/')
+def modificarespecialidadajax(request):
 	# try:
 	j = int(request.GET['dnis'])
-	pr = int(request.GET['p'])
-	prueba = Prueba.objects.get(pk=pr)
-	if Logro.objects.filter(dnis=j,prueba=prueba).exists():
-		logro = Logro.objects.get(dnis=j,prueba=prueba)
-		logro.delete()
-		resultado = -1
-	else:
-		logro = Logro.objects.create(dnis=j,prueba=prueba)
+	tipo = int(request.GET['tipo'])
+	cambio = int(request.GET['cambio'])
+	try:
+		especialidad = Especialidades.objects.get(dnis=j,tipo=tipo-1)
+		if especialidad.nivel == 1 and cambio == -1 :
+			especialidad.delete()
+			resultado = 0
+		elif especialidad.nivel == 3 and cambio == 1:
+			resultado = -1
+		else:
+			especialidad.nivel = especialidad.nivel + cambio
+			if cambio == 1:
+				especialidad.fecha_entrega = datetime.today()
+			especialidad.save()
+			resultado = especialidad.nivel
+	except:
+		especialidad = Especialidades.objects.create(dnis=j,tipo=tipo-1,nivel=1,fecha_entrega=datetime.today())
 		resultado = 1
 	# except:
 	# 	resultado = 0
-	return HttpResponse(json.dumps(resultado),content_type='application/json')	
-
-def certificados(request,codigo):
-	certificado = Certificado.objects.get(codigo=codigo)
-	evento = Evento.objects.get(certificado=certificado)
-	participantes = Participante.objects.filter(evento=evento.nombre)
-	return render(request,'certificados.html',{'certificado':certificado,'evento':evento,'participantes':participantes})
-
-def certificadoindividual(request,evento,nombre):
-    evento = Evento.objects.get(certificado__codigo=evento)
-    participante = Participante.objects.get(numero=nombre)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = "filename='"+evento.certificado.codigo+"-"+participante.numero+".pdf'"
-    
-    logo = ImageReader("/home/programachacao/ProgramaChacao/static/certificados/"+evento.certificado.codigo+".jpg")
-    
-    p = canvas.Canvas(response,pagesize=landscape(letter))
-    w, h = landscape(letter)
-    p.drawImage(logo, 0,0,width=w,height=h) 
-    p.setFillColorRGB(0.2,0.5,0.3)
-    p.setFont("Helvetica-Bold",48)
-    p.drawCentredString(w/2, h/2-50, participante.primer_nombre.upper()+" "+participante.primer_apellido.upper())
-    p.setFillColorRGB(1,1,1)
-    p.setFont("Helvetica",12)
-    p.drawCentredString(w/2+300, h/2-250, evento.certificado.codigo+"-"+participante.numero)
-
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
-    return response
-
-def certificadomop(request,codigo):
-    evento = Certificado.objects.get(razon="Programa Mensajeros de Paz")
-    participante = ParticipanteProgramasMundiales.objects.get(numero=codigo)
-    joven = Joven.objects.get(pk=participante.dnis)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = "filename='"+evento.codigo+"-"+participante.numero+".pdf'"
-    
-    logo = ImageReader("/home/programachacao/ProgramaChacao/maximas/static/certificados/mop-"+str(participante.fecha.year)+".jpg")
-    
-    p = canvas.Canvas(response)
-    p.setPageSize((594, 792))
-    w, h = (594,792)
-    p.drawImage(logo, 0,0,width=w,height=h) 
-    p.setFillColorRGB(0.3,0.3,0.3)
-    p.setFont("Helvetica-Bold",20)
-    p.drawCentredString(w/2+15, h/2-45, joven.primer_nombre.capitalize()+" "+joven.segundo_nombre.replace(" ","").capitalize()+" "+joven.primer_apellido.capitalize()+" "+joven.segundo_apellido.capitalize())
-    p.setFont("Helvetica-Bold",12)
-    p.drawCentredString(w/2+15, h/2-60, "C.I. "+str(joven.cedula))
-    p.setFillColorRGB(1,1,1)
-    p.setFont("Helvetica-Bold",9)
-    p.drawString(w/2-292, h/2-382, evento.codigo+participante.numero+"-"+str(participante.fecha.year))
-    mes = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
-    p.drawString(w/2-292, h/2-392, "Caracas "+str(participante.fecha.day)+" de "+mes[participante.fecha.month-1]+" de "+str(participante.fecha.year))
-
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
-    return response
+	return HttpResponse(json.dumps(resultado),content_type='application/json')		
 
 @login_required(login_url ='/')
 def cursos(request,grupo):
@@ -726,17 +756,64 @@ def programasmundiales(request,grupo):
 			for j in jovenes:
 				listacursos = []
 				for c in cursos:
-					print(c+" "+str(j.id))
 					try:
 						p = ParticipanteProgramasMundiales.objects.get(evento=c,dnis=j.id)
 						e = Certificado.objects.get(razon=c)
 						listacursos.append([p.numero,e.codigo])
-						print(p+" "+e)
 					except:
 						listacursos.append([0,0])
+				print(str(listacursos))
 				listajoven.append(listacursos)
 			listaunidad.append(zip(jovenes,listajoven))
 		listafinal = (zip(unidades,cursostotal,listaunidad))
 		return render(request,'programasmundiales.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'cursos':listafinal})
+	else:
+		return render(request, '404.html', {})
+
+@login_required(login_url ='/')
+def especialidades(request,grupo):
+	g =  definegrupo(grupo)
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	u = []
+	if permisos.manada_masculina:
+		u.append('MM')
+	if permisos.manada_femenina:
+		u.append('MF')
+	if permisos.tropa_masculina:
+		u.append('TM')
+	if permisos.tropa_femenina:
+		u.append('TF')
+	if permisos.clan_masculina:
+		u.append('CM')
+	if permisos.clan_femenina:
+		u.append('CF')
+	unidades = []
+	cursostotal = []
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	gr = definegrupo(grupo)
+	listaunidad = []
+	cod = ['AYH','IDN','CFI','CYT','SER','PPT','VAL','HYD']
+	cursos = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
+	if (gru == g):
+		for x in u:
+			un = defineunidad(x)
+			unidades.append(defineunidad(x))
+			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+			listajoven = []
+			for j in jovenes:
+				listacursos = []
+				for i,c in enumerate(cursos):
+					try:
+						p = Especialidades.objects.get(tipo=i,dnis=j.id)
+						listacursos.append([p.nivel,cod[i]])
+					except:
+						listacursos.append([0,0])
+				listajoven.append(listacursos)
+			listaunidad.append(zip(jovenes,listajoven))
+		listafinal = (zip(unidades,listaunidad))
+		for x,z in listafinal:
+			print(str(x)+"\n")
+			print(str(z)+"\n\n\n")
+		return render(request,'especialidades.html',{'fotoperfil':permisos.imagen,'especialidades':cursos,'gru':grupo,'g':gr,'cursos':listafinal})
 	else:
 		return render(request, '404.html', {})

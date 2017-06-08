@@ -145,8 +145,28 @@ class ParticipanteCursos(models.Model):
 class ParticipanteProgramasMundiales(models.Model):
 	dnis = models.IntegerField(default=0)
 	evento = models.CharField(max_length=100)
-	numero = models.CharField(max_length=5)
+	numero = models.CharField(max_length=10)
 	fecha = models.DateField(blank=True,null=True)
+	def __str__(self):
+		return str(self.dnis)+" - "+self.evento
+
+
+
+class Especialidades(models.Model): 
+	dnis = models.IntegerField(default=0)
+	tipo = models.IntegerField(default=0)
+	nivel = models.IntegerField(default=0)
+	fecha_entrega = models.DateField(default=datetime.now)
+
+	def __str__(self):
+		return str(self.tipo)+" - "+str(self.nivel)+" - "+str(self.dnis)
+
+
+	def __unicode__(self):
+		return str(self.tipo)+" - "+str(self.nivel)+" - "+str(self.dnis)
+
+
+
 
 def __str__(self):
 		return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
@@ -177,16 +197,6 @@ class Prueba(models.Model):
 		return self.unidad+" "+self.adelanto+" - "+self.nombre
 
 class Logro(models.Model):
-	a = (('LO','Lobato/Lobezna'),('HF','Huella Fresca'),
-				('HA','Huella Alerta'),('HG','Huella Agil'),
-				('HL','Huella Libre'),('LS','Lobo Saltarin'),
-				('NO','Novicio'),('AV','Aventurero'),
-				('EX','Explorador'),('PI','Pionero'),
-				('SB','Scout de Bolivar'),('NV','Novato'),
-				('PR','Precursor'),('EP','Expedicionario'),
-				('DE','Descubridor'),('FU','Fundador'),('RC','Rover Ciudadano'))
-	unidades = (
-    ('M','Manada'), ('T','Tropa'),  ('C','Clan'), ('G','Grupo')) 
 	dnis = models.IntegerField(default=0)
 	prueba = models.ForeignKey('Prueba')
 
@@ -208,3 +218,28 @@ class PermisoUnidad(models.Model):
 
 	def __str__(self):
 			return str(self.usuario)
+
+class Adelanto(models.Model):
+	a = (('LO','Lobato/Lobezna'),('HF','Huella Fresca'),
+				('HA','Huella Alerta'),('HG','Huella Agil'),
+				('HL','Huella Libre'),('LS','Lobo Saltarin'),
+				('NO','Novicio'),('AV','Aventurero'),
+				('EX','Explorador'),('PI','Pionero'),
+				('SB','Scout de Bolivar'),('NV','Novato'),
+				('PR','Precursor'),('EP','Expedicionario'),
+				('DE','Descubridor'),('FU','Fundador'),('RC','Rover Ciudadano'))
+	unidades = (
+    ('M','Manada'), ('T','Tropa'),  ('C','Clan'), ('G','Grupo')) 
+	usuario = models.ForeignKey('Joven',related_name="joven")
+	insignia = models.CharField(choices=a,max_length=2)
+	fecha_entrega = models.DateField(default=datetime.now)
+
+	def __str__(self):
+			return str(self.usuario.pk) + (self.insignia)
+
+	def __unicode__(self):
+			return str(self.usuario.pk)
+
+
+	def insignia_verbose(self):
+		return dict(Adelanto.a)[self.insignia]

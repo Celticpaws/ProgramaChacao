@@ -93,10 +93,24 @@ class PruebaAdmin(ImportExportMixin, admin.ModelAdmin):
 class AdultoAdmin(ImportMixin, admin.ModelAdmin):
     pass
 
+class AdelantoResource(ModelResource):
+
+    class Meta:
+        model = Adelanto
+    def for_delete(self, row, instance):
+        return self.fields['id'].clean(row) == ''
+
+
+class AdelantoAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_filter = ['insignia']
+    resource_class = AdelantoResource   
+
 admin.site.register(Joven, JovenAdmin)
 admin.site.register(Adulto, AdultoAdmin)
 admin.site.register(Grupo)
 admin.site.register(Evento)
+admin.site.register(Adelanto, AdelantoAdmin)
+admin.site.register(Especialidades)
 admin.site.register(Condecoraciones)
 admin.site.register(CIP)
 admin.site.register(Certificado)

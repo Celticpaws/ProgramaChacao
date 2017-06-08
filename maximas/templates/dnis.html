@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>PROGRAMA DE JOVENES - CHACAO </title>
+  
+  <!-- Styles -->
+  <link rel='stylesheet' href='/static/css/bootstrap.min2.css'>
+  <link rel='stylesheet' href='/static/css/animate.min2.css'>
+  <link rel='stylesheet' href="/static/css/font-awesome-min.css"/>
+  <link rel='stylesheet' href="/static/css/style.css"/>
+  <link rel='stylesheet' href="/static/css/login.css"/>
+  
+  <!-- Fonts -->
+  <link href='http://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+      
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="#">
+</head>
+<body>
+<!-- Begin Hero Bg -->
+<div id="parallax">
+</div>
+<!-- End Hero Bg
+  ================================================== -->
+<!-- Start Header
+  ================================================== -->
+
+<section id="about" class="parallax section" style="background-image: url(http://themepush.com/demo/runcharity//static/img/1.jpg);">
+<div class="wrapsection">
+  <div class="parallax-overlay" style="background-color: #612599;opacity:0.7;"></div>
+  <div class="container">
+    <div class="row">
+    <h1 style="color:white" class="navbar-brand">PROGRAMA DE JOVENES <span class="lighter">CHACAO</span></h1><br><br>
+      <div class="col-md-12">
+        <div class="login-page">
+        <div class="form">
+            <h2 align="left" style="color:black"> DNIS: </h2><br>
+            <input style="color:black" id="username" name="username" type="number" placeholder="DNIS"/>
+            <h2 align="left" style="color:black"> Fecha de nacimiento: </h2><br>
+            <input style="color:black" id="password" name="password" type="date" placeholder="Fecha de Nacimiento"/>
+            <button onclick="redirige(document.getElementById('username').value,document.getElementById('password').value)">Buscar</button>
+        </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </section>
+</body>
+
+
+<script>
+$('.message a').click(function(){
+   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+});
+</script>
+
+
+<script>
+function redirige(dnis,fecha){
+  window.location="/dnis"+dnis+"/"+fecha
+}
+</script>
