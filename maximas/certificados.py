@@ -36,7 +36,7 @@ def certificados(request,codigo):
 
 def certificadoindividual(request,evento,nombre):
     evento = Evento.objects.get(certificado__codigo=evento)
-    participante = Participante.objects.get(numero=nombre)
+    participante = Participante.objects.get(evento=evento.nombre,numero=nombre)
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = "filename='"+evento.certificado.codigo+"-"+participante.numero+".pdf'"
     
