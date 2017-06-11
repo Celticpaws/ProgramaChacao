@@ -175,9 +175,9 @@ def __unicode__(self):
 	return self.primer_nombre+" "+self.primer_apellido+" - "+str(self.evento)
 
 class Prueba(models.Model):
-	a = (('CA','Cachorro'),('HF','Huella Fresca'),
-				('HA','Huella Alerta'),('HG','Huella Agil'),
-				('HL','Huella Libre'),('LS','Lobo Saltarin'),
+	a = (('LO','Lobato'),('FR','Huella Fresca'),
+				('AL','Huella Alerta'),('AG','Huella Agil'),
+				('LI','Huella Libre'),('LS','Lobo Saltarin'),
 				('NO','Novicio'),('AV','Aventurero'),
 				('EX','Explorador'),('PI','Pionero'),
 				('SB','Scout de Bolivar'),('NV','Novato'),

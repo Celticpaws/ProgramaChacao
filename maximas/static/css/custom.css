@@ -6493,29 +6493,29 @@ tbody td:last-child, thead th:last-child {
 }
 
   .lobato {
-    background: #663d00;
+    background: #803300;
     color:white;
 
   }
  .fresca {
-    background: #995c00;
+    background:  #cc5200;
     color:white;
   }
  .alerta {
-    background: #cc7a00;
+    background: #ff6600;
     color:white;
   }
  .agil {
-    background: #ff9900;
+    background: #ff8c1a;
   }
 
   .libre {
-    background: #ffad33;
+    background: #ffff00;
     
   }
 
   .ls {
-    background: #ffc266;
+    background: #ffff66;
     
   }
   .desv {
@@ -6523,18 +6523,18 @@ tbody td:last-child, thead th:last-child {
     color:white;
   }  
   .aventurero {
-    background: #003300;
+    background: #4d3319;
     color:white;
   }  
   .explorador {
-    background: #008000;
+    background: #996633;
     color:white;
   }
   .pionero {
-    background: #00cc00;
+    background: #cc9966;
   }
   .sb {
-    background:#4dff4d;
+    background:#d9b38c;
   }
   .precursor {
     background: #330000;

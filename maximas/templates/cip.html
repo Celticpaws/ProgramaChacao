@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 
     {% block title %} 
-    Condecoraciones
+    CIP
     {% endblock %}
  <script src="js/jquery.min.js"></script>
 
@@ -19,7 +19,7 @@
                   {% else %}
                   <span class='label label-success'>
               	  {% endif %}
-              	  Cuadro de Metas </span>
+              	  Ciclos Institucionales de Programa </span>
                     
                 </h3>
             </div>
@@ -81,10 +81,10 @@
 								<td class="text-center" style="text-transform: uppercase">
 									<strong id="c{{forloop.counter}}">
 										{% if c.0 == '-1' %}
-											<span class="tooltip"><i style="font-size:2em" class="fa fa-check" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}{{c.0}}</span></span>
+											<span class="tooltip"><i style="font-size:2em" class="fa fa-check-circle-o" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}{{c.0}}</span></span>
 										{% else %}
 											{% if c.0 != 0%}
-												<a href="/certificados/{{c.1}}/{{c.0}}"class="tooltip"><i style="font-size:2em" class="fa fa-check" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}-{{c.0}}</span></a>
+												<a href="/certificados/{{c.1}}/{{c.0}}"class="tooltip"><i style="font-size:2em" class="fa fa-check-circle-o" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}-{{c.0}}</span></a>
 											{% endif %}
 										{% endif %}
 									</strong></td>
@@ -117,10 +117,10 @@
 								<td class="text-center" style="text-transform: uppercase">
 									<strong id="c{{forloop.counter}}">
 										{% if c.0 == '-1' %}
-											<span class="tooltip"><i style="font-size:2em" class="fa fa-check" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}{{c.0}}</span></span>
+											<span class="tooltip"><i style="font-size:2em" class="fa fa-check-circle-o" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}{{c.0}}</span></span>
 										{% else %}
 											{% if c.0 != 0%}
-												<a href="/certificados/{{c.1}}/{{c.0}}"class="tooltip"><i style="font-size:2em" class="fa fa-check" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}-{{c.0}}</span></a>
+												<a href="/certificados/{{c.1}}/{{c.0}}"class="tooltip"><i style="font-size:2em" class="fa fa-check-circle-o" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}-{{c.0}}</span></a>
 											{% endif %}
 										{% endif %}
 									</strong></td>
@@ -155,10 +155,10 @@
 								<td class="text-center" style="text-transform: uppercase">
 									<strong id="c{{forloop.counter}}">
 										{% if c.0 == '-1' %}
-											<span class="tooltip"><i style="font-size:2em" class="fa fa-check" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}{{c.0}}</span></span>
+											<span class="tooltip"><i style="font-size:2em" class="fa fa-check-circle-o" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}{{c.0}}</span></span>
 										{% else %}
 											{% if c.0 != 0%}
-												<a href="/certificados/{{c.1}}/{{c.0}}"class="tooltip"><i style="font-size:2em" class="fa fa-check" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}-{{c.0}}</span></a>
+												<a href="/certificados/{{c.1}}/{{c.0}}"class="tooltip"><i style="font-size:2em" class="fa fa-check-circle-o" aria-hidden="true"></i><span class="tooltiptext">{{c.1}}-{{c.0}}</span></a>
 											{% endif %}
 										{% endif %}
 									</strong></td>

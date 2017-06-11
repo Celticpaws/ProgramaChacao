@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 
     {% block title %} 
-    Condecoraciones
+    Cuadro de Adelantos
     {% endblock %}
  <script src="js/jquery.min.js"></script>
 
@@ -128,6 +128,7 @@
 									<tr>
 									<th style="width:20px;background-color: #c02126;border-color: #610e10;" class="text-left">DNIS</th>
 									<th style="background-color: #c02126;border-color: #610e10;" class="text-left">Nombre</th>
+                  
 									{% for p in prueba %}
 										<th style="background-color: #c02126;border-color: #610e10;" class="text-center" onclick="descripcion('{{p.id}}')" ><span id="pr{{p.id}}"> {{p.nombre}} <span id="de{{p.id}}" style="display:none">{{p.descripcion}}</span></span></th>
 									{% endfor %}

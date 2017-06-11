@@ -28,6 +28,23 @@ import json
 import math
 import sys
 from .certificados import *
+from .ajax import *
+
+def revisarpermisos(permisos):
+	u =  []
+	if permisos.manada_masculina:
+		u.append('MM')
+	if permisos.manada_femenina:
+		u.append('MF')
+	if permisos.tropa_masculina:
+		u.append('TM')
+	if permisos.tropa_femenina:
+		u.append('TF')
+	if permisos.clan_masculina:
+		u.append('CM')
+	if permisos.clan_femenina:
+		u.append('CF')
+	return u
 
 def definegrupo(g):
 	if g == "STA":
@@ -143,7 +160,7 @@ def perfil(request,dnis,fecha):
 		print(vidaenunidad)
 	e = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
 	esp = []
-	adelantos = Adelanto.objects.filter(usuario=dnis).order_by('fecha_entrega')			
+	adelantos = Adelanto.objects.filter(usuario=dnis).order_by('-fecha_entrega')			
 	especialidades = Especialidades.objects.filter(dnis=dnis)
 	for es in especialidades:
 		esp.append([es,e[es.tipo]])
@@ -154,19 +171,7 @@ def perfil(request,dnis,fecha):
 def cuadrosmetas(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
 	gr = definegrupo(grupo)
@@ -321,19 +326,7 @@ def cuadrosmetas(request,grupo):
 def cip(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
 	gr = definegrupo(grupo)
@@ -417,19 +410,7 @@ def cip(request,grupo):
 def condecoraciones(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
 	if (gru == g):
@@ -505,19 +486,7 @@ def condecoraciones(request,grupo):
 def adelantos(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
 	if (gru == g):
@@ -526,11 +495,9 @@ def adelantos(request,grupo):
 		for x in u:
 			unidades.append(defineunidad(x))
 			if x == 'MM':
-				adelantos = ['Lobato','Huella Fresca','Huella Alerta','Huellas Agil','Huella Libre','Lobo Saltarin']
+				adelantos = ['Lobato','Huella Fresca','Huella Alerta','Huella Agil','Huella Libre','Lobo Saltarin']
 				gr = definegrupo(grupo)
 				un = defineunidad(x)
-				jovenes = Joven.objects.filter(grupo=g,unidad=defineunidad(x))
-				jovenestotal.append(jovenes)
 				plobato = Prueba.objects.filter(unidad='M',adelanto='LO')
 				pfresca = Prueba.objects.filter(unidad='M',adelanto='FR')
 				palerta = Prueba.objects.filter(unidad='M',adelanto='AL')
@@ -540,6 +507,9 @@ def adelantos(request,grupo):
 				pruebas = [plobato,pfresca,palerta,pagil,plibre,plobo]
 				aprobados=[]
 				for i,p in enumerate(adelantos):
+					nombres = ['Cachorro']+adelantos[0:adelantos.index(p)]
+					jovenes = Joven.objects.filter(grupo=g,unidad=defineunidad(x),adelanto__in =nombres)
+					jovenestotal.append(jovenes)
 					aproba=[]
 					for j in jovenes:
 						apro =[]
@@ -551,11 +521,9 @@ def adelantos(request,grupo):
 				pruebas = zip(adelantos,pruebas,aprobados)
 				pruebastotal.append(pruebas)
 			elif x == 'MF':
-				adelantos = ['Lobezna','Huella Fresca','Huella Alerta','Huellas Agil','Huella Libre','Lobo Saltarin']
+				adelantos = ['Lobato','Huella Fresca','Huella Alerta','Huella Agil','Huella Libre','Lobo Saltarin']
 				gr = definegrupo(grupo)
 				un = defineunidad(x)
-				jovenes = Joven.objects.filter(grupo=g,unidad=un)
-				jovenestotal.append(jovenes)
 				plobato = Prueba.objects.filter(unidad='M',adelanto='LO')
 				pfresca = Prueba.objects.filter(unidad='M',adelanto='FR')
 				palerta = Prueba.objects.filter(unidad='M',adelanto='AL')
@@ -565,6 +533,9 @@ def adelantos(request,grupo):
 				pruebas = [plobato,pfresca,palerta,pagil,plibre,plobo]
 				aprobados=[]
 				for i,p in enumerate(adelantos):
+					nombres = ['Cachorro']+adelantos[1:adelantos.index(p)]
+					jovenes = Joven.objects.filter(grupo=g,unidad=un,adelanto__in =nombres)
+					jovenestotal.append(jovenes)
 					aproba=[]
 					for j in jovenes:
 						apro =[]
@@ -578,8 +549,6 @@ def adelantos(request,grupo):
 				adelantos = ['Aventurero','Explorador','Pionero','Scout de Bolivar']
 				gr = definegrupo(grupo)
 				un = defineunidad(x)
-				jovenes = Joven.objects.filter(grupo=g,unidad=un)
-				jovenestotal.append(jovenes)
 				paventurero = Prueba.objects.filter(unidad='T',adelanto='AV')
 				pexplorador = Prueba.objects.filter(unidad='T',adelanto='EX')
 				ppionero = Prueba.objects.filter(unidad='T',adelanto='PI')
@@ -587,6 +556,9 @@ def adelantos(request,grupo):
 				pruebas = [paventurero,pexplorador,ppionero,pscoutdebolivar]
 				aprobados=[]
 				for i,p in enumerate(adelantos):
+					nombres = ['Novicio']+adelantos[0:adelantos.index(p)]
+					jovenes = Joven.objects.filter(grupo=g,unidad=defineunidad(x),adelanto__in =nombres)
+					jovenestotal.append(jovenes)
 					aproba=[]
 					for j in jovenes:
 						apro =[]
@@ -626,65 +598,10 @@ def adelantos(request,grupo):
 		return render(request, '404.html', {})
 
 @login_required(login_url ='/')
-def modificaradelantoajax(request):
-	try:
-		j = int(request.GET['dnis'])
-		pr = int(request.GET['p'])
-		prueba = Prueba.objects.get(pk=pr)
-		if Logro.objects.filter(dnis=j,prueba=prueba).exists():
-			logro = Logro.objects.get(dnis=j,prueba=prueba)
-			logro.delete()
-			resultado = -1
-		else:
-			logro = Logro.objects.create(dnis=j,prueba=prueba)
-			resultado = 1
-	except:
-		resultado = 0
-	return HttpResponse(json.dumps(resultado),content_type='application/json')	
-
-@login_required(login_url ='/')
-def modificarespecialidadajax(request):
-	# try:
-	j = int(request.GET['dnis'])
-	tipo = int(request.GET['tipo'])
-	cambio = int(request.GET['cambio'])
-	try:
-		especialidad = Especialidades.objects.get(dnis=j,tipo=tipo-1)
-		if especialidad.nivel == 1 and cambio == -1 :
-			especialidad.delete()
-			resultado = 0
-		elif especialidad.nivel == 3 and cambio == 1:
-			resultado = -1
-		else:
-			especialidad.nivel = especialidad.nivel + cambio
-			if cambio == 1:
-				especialidad.fecha_entrega = datetime.today()
-			especialidad.save()
-			resultado = especialidad.nivel
-	except:
-		especialidad = Especialidades.objects.create(dnis=j,tipo=tipo-1,nivel=1,fecha_entrega=datetime.today())
-		resultado = 1
-	# except:
-	# 	resultado = 0
-	return HttpResponse(json.dumps(resultado),content_type='application/json')		
-
-@login_required(login_url ='/')
 def cursos(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	cursostotal = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
@@ -692,31 +609,29 @@ def cursos(request,grupo):
 	listaunidad = []
 	if (gru == g):
 		for x in u:
-			un = defineunidad(x)
-			unidades.append(defineunidad(x))
-			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
-			if x == "TM" or x == "TF":
-				cursos = ['Punta de Flecha en Bronce','Punta de Flecha en Plata','Punta de Flecha en Oro']
-			elif x == "CM" or x == "CF":
-				cursos = ['Horqueta','Remo','Canoa']
-			cursostotal.append(cursos)
-			listajoven = []
-			for j in jovenes:
-				listacursos = []
-				for c in cursos:
-					try:
-						p = ParticipanteCursos.objects.get(evento=c,dnis=j.id)
-						e = Certificado.objects.get(razon=p.evento)
-						listacursos.append([p.numero,e.codigo])
-					except:
-						listacursos.append([0,0])
-				listajoven.append(listacursos)
-			listaunidad.append(zip(jovenes,listajoven))
-		listafinal = (zip(unidades,cursostotal,listaunidad))
-		for x,y,z in listafinal:
-			print(str(x)+"\n")
-			print(str(y)+"\n")
-			print(str(z)+"\n\n\n")
+			if x !="MM" and x !="MF":
+				un = defineunidad(x)
+				unidades.append(defineunidad(x))
+				jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+				cursos = []
+				if x == "TM" or x == "TF":
+					cursos = ['Punta de Flecha en Bronce','Punta de Flecha en Plata','Punta de Flecha en Oro']
+				elif x == "CM" or x == "CF":
+					cursos = ['Horqueta','Remo','Canoa']
+				cursostotal.append(cursos)
+				listajoven = []
+				for j in jovenes:
+					listacursos = []
+					for c in cursos:
+						try:
+							p = ParticipanteCursos.objects.get(evento=c,dnis=j.id)
+							e = Certificado.objects.get(razon=p.evento)
+							listacursos.append([p.numero,e.codigo])
+						except:
+							listacursos.append([0,0])
+					listajoven.append(listacursos)
+				listaunidad.append(zip(jovenes,listajoven))
+			listafinal = (zip(unidades,cursostotal,listaunidad))
 		return render(request,'cursos.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'cursos':listafinal})
 	else:
 		return render(request, '404.html', {})
@@ -725,19 +640,7 @@ def cursos(request,grupo):
 def programasmundiales(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	cursostotal = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
@@ -762,7 +665,7 @@ def programasmundiales(request,grupo):
 						listacursos.append([p.numero,e.codigo])
 					except:
 						listacursos.append([0,0])
-				print(str(listacursos))
+				
 				listajoven.append(listacursos)
 			listaunidad.append(zip(jovenes,listajoven))
 		listafinal = (zip(unidades,cursostotal,listaunidad))
@@ -774,19 +677,7 @@ def programasmundiales(request,grupo):
 def especialidades(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = []
-	if permisos.manada_masculina:
-		u.append('MM')
-	if permisos.manada_femenina:
-		u.append('MF')
-	if permisos.tropa_masculina:
-		u.append('TM')
-	if permisos.tropa_femenina:
-		u.append('TF')
-	if permisos.clan_masculina:
-		u.append('CM')
-	if permisos.clan_femenina:
-		u.append('CF')
+	u = revisarpermisos(permisos)
 	unidades = []
 	cursostotal = []
 	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
@@ -811,9 +702,267 @@ def especialidades(request,grupo):
 				listajoven.append(listacursos)
 			listaunidad.append(zip(jovenes,listajoven))
 		listafinal = (zip(unidades,listaunidad))
-		for x,z in listafinal:
-			print(str(x)+"\n")
-			print(str(z)+"\n\n\n")
+			
 		return render(request,'especialidades.html',{'fotoperfil':permisos.imagen,'especialidades':cursos,'gru':grupo,'g':gr,'cursos':listafinal})
+	else:
+		return render(request, '404.html', {})
+
+
+def maximasalerta(request,grupo):
+	g =  definegrupo(grupo)
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	u = revisarpermisos(permisos)
+	unidades = []
+	cursostotal = []
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	gr = definegrupo(grupo)
+	listaunidad = []
+	if (gru == g):
+		hoy = datetime.today()
+		listajoven = []
+		for x in u:
+			un = defineunidad(x)
+			unidades.append(defineunidad(x)) 
+			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+			if x == "MM" or x == "MF" :
+				for j in jovenes:
+					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					desvinculacion = nacimiento +timedelta(days=11*365) 
+					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
+						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
+						if especialidades.count() >= 2:
+							esp1= especialidades[0]
+							esp2= especialidades[1]
+						elif especialidades.count() == 1:
+							esp1= especialidades[0]
+							esp2= 0
+						else:
+							esp1=0
+							esp2=0
+						grupal = CIP.objects.values_list('nombre',flat=True).filter(nivel='Grupal')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=grupal).exists():
+							g = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=grupal)[0]
+						else:
+							g = 0
+						distrital = CIP.objects.values_list('nombre',flat=True).filter(nivel='Distrital',unidad='M')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=distrital).exists():
+							d = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=distrital)[0]
+						else:
+							d = 0
+						regional = CIP.objects.values_list('nombre',flat=True).filter(nivel='Regional',unidad='M')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=regional).exists():
+							r = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=regional)[0]
+						else:
+							r = 0
+						nacional = CIP.objects.values_list('nombre',flat=True).filter(nivel='Nacional',unidad='M')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=nacional).exists():
+							n = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=nacional)[0]
+						else:
+							n = 0
+						edad = (hoy - nacimiento).days/365
+						estado = (esp1!=0 and esp2!=0 and g!=0 and d !=0 and (r!=0 or n!=0))
+						listajoven.append([j,1,edad,desvinculacion-hoy,esp1,esp2,g,d,r,n,estado])
+			elif x == "TM" or x == "TF" : 
+				for j in jovenes:
+					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					desvinculacion = nacimiento +timedelta(days=16*365) 
+					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
+						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
+						if especialidades.count() >= 2:
+							esp1= especialidades[0]
+							esp2= especialidades[1]
+						elif especialidades.count() == 1:
+							esp1= especialidades[0]
+							esp2= 0
+						else:
+							esp1=0
+							esp2=0
+						grupal = CIP.objects.values_list('nombre',flat=True).filter(nivel='Grupal')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=grupal).exists():
+							g = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=grupal)[0]
+						else:
+							g = 0
+						distrital = CIP.objects.values_list('nombre',flat=True).filter(nivel='Distrital',unidad='T')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=distrital).exists():
+							d = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=distrital)[0]
+						else:
+							d = 0
+						regional = CIP.objects.values_list('nombre',flat=True).filter(nivel='Regional',unidad='T')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=regional).exists():
+							r = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=regional)[0]
+						else:
+							r = 0
+						nacional = CIP.objects.values_list('nombre',flat=True).filter(nivel='Nacional',unidad='T')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=nacional).exists():
+							n = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=nacional)[0]
+						else:
+							n = 0
+						edad = (hoy - nacimiento).days/365
+						estado = (esp1!=0 and esp2!=0 and g!=0 and d !=0 and (r!=0 or n!=0))
+						listajoven.append([j,2,edad,desvinculacion-hoy,esp1,esp2,g,d,r,n,estado])
+			elif x == "CM" or x == "CF" : 
+				for j in jovenes:
+					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					desvinculacion = nacimiento +timedelta(days=21*365) 
+					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
+						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
+						if especialidades.count() >= 2:
+							esp1= especialidades[0]
+							esp2= especialidades[1]
+						elif especialidades.count() == 1:
+							esp1= especialidades[0]
+							esp2= 0
+						else:
+							esp1=0
+							esp2=0
+						grupal = CIP.objects.values_list('nombre',flat=True).filter(nivel='Grupal')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=grupal).exists():
+							g = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=grupal)[0]
+						else:
+							g = 0
+						distrital = CIP.objects.values_list('nombre',flat=True).filter(nivel='Distrital',unidad='C')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=distrital).exists():
+							d = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=distrital)[0]
+						else:
+							d = 0
+						regional = CIP.objects.values_list('nombre',flat=True).filter(nivel='Regional',unidad='C')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=regional).exists():
+							r = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=regional)[0]
+						else:
+							r = 0
+						nacional = CIP.objects.values_list('nombre',flat=True).filter(nivel='Nacional',unidad='C')
+						if ParticipanteCIP.objects.filter(dnis=j.id,evento__in=nacional).exists():
+							n = ParticipanteCIP.objects.filter(dnis=j.id,evento__in=nacional)[0]
+						else:
+							n = 0
+						edad = (hoy - nacimiento).days/365
+						estado = (esp1!=0 and esp2!=0 and g!=0 and d !=0 and (r!=0 or n!=0))
+						listajoven.append([j,3,edad,desvinculacion-hoy,esp1,esp2,g,d,r,n,estado])
+
+		return render(request,'maximasalerta.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'lista':listajoven})
+	else:
+		return render(request, '404.html', {})
+
+def desvinculaciones(request,grupo):
+	g =  definegrupo(grupo)
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	u = revisarpermisos(permisos)
+	unidades = []
+	cursostotal = []
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	gr = definegrupo(grupo)
+	listaunidad = []
+	if (gru == g):
+		hoy = datetime.today()
+		listajoven = []
+		for x in u:
+			un = defineunidad(x)
+			unidades.append(defineunidad(x)) 
+			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+			if x == "MM" or x == "MF" :
+				for j in jovenes:
+					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					desvinculacion = datetime.strptime(j.f_nac, '%d/%m/%Y')+timedelta(days=11*365) 
+					edad = (hoy - nacimiento).days/365 
+					if desvinculacion < hoy :
+						listajoven.append([j,1,edad,hoy-desvinculacion,j.gen])
+			elif x == "TM" or x == "TF" : 
+				for j in jovenes:
+					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					desvinculacion = datetime.strptime(j.f_nac, '%d/%m/%Y')+timedelta(days=16*365) 
+					edad = (hoy - nacimiento).days/365 
+					if desvinculacion < hoy :
+						listajoven.append([j,2,edad,hoy-desvinculacion,j.gen])
+			elif x == "CM" or x == "CF" : 
+				for j in jovenes:
+					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					desvinculacion = datetime.strptime(j.f_nac, '%d/%m/%Y')+timedelta(days=21*365)
+					edad = (hoy - nacimiento).days/365 
+					if desvinculacion < hoy: 
+						listajoven.append([j,3,edad,hoy-desvinculacion,j.gen])
+		return render(request,'devinculacion.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'lista':listajoven})
+	else:
+		return render(request, '404.html', {})
+
+
+def solicitaradelanto(request,grupo):
+	g =  definegrupo(grupo)
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	u = revisarpermisos(permisos)
+	unidades = []
+	cursostotal = []
+	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
+	gr = definegrupo(grupo)
+	listaunidad = []
+	listatotal=[]
+	if (gru == g):
+		hoy = datetime.today()
+		listajoven = []
+		for x in u:
+			un = defineunidad(x)
+			unidades.append(defineunidad(x)) 
+			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+			if x == "MM" or x == "MF" :
+				adelantos = ['Cachorro','Lobato','Huella Fresca','Huella Alerta','Huella Agil','Huella Libre','Lobo Saltarin']
+				pruebasdeadelantos =  ['LO','FR','AL','AG','LI','LS']
+				insignia = ['LO','HF','HA','HG','HL','LS']
+				listajoven=[]
+				for j in jovenes:
+					adelanto = j.adelanto
+					if adelanto != "Lobo Saltarin":
+						proximo = pruebasdeadelantos[adelantos.index(adelanto)]
+						totalpruebas =  Prueba.objects.filter(unidad='M',adelanto=proximo).count()
+						p = Prueba.objects.values_list("pk",flat=True).filter(adelanto=proximo)
+						aprobados = Logro.objects.filter(dnis=j.id,prueba__in = p).count()
+						if datetime.strptime(j.f_nac, '%d/%m/%Y')+ timedelta(days=11*365) < datetime.now():
+							proximo = 'T'
+						else:
+							proximo = insignia[adelantos.index(adelanto)]
+						listajoven.append([j,adelanto,proximo,aprobados,totalpruebas])
+			elif x == "TM" or x == "TF" :
+				adelantos = ['Novicio','Aventurero','Explorador','Pionero','Scout de Bolivar']
+				pruebasdeadelantos =  ['AV','EX','PI','SB']
+				insignia = ['AV','EX','PI','SB']
+				listajoven=[]
+				for j in jovenes:
+					adelanto = j.adelanto
+					if adelanto != "Scout de Bolivar":
+						proximo = pruebasdeadelantos[adelantos.index(adelanto)]
+						totalpruebas =  Prueba.objects.filter(unidad='T',adelanto=proximo).count()
+						p = Prueba.objects.values_list("pk",flat=True).filter(adelanto=proximo)
+						aprobados = Logro.objects.filter(dnis=j.id,prueba__in = p).count()
+						if datetime.strptime(j.f_nac, '%d/%m/%Y')+ timedelta(days=16*365) < datetime.now():
+							proximo = 'C'
+						else:
+							proximo = insignia[adelantos.index(adelanto)]
+						listajoven.append([j,adelanto,proximo,aprobados,totalpruebas])
+			elif x == "CM" or x == "CF" :
+				adelantos = ['Novato','Precursor','Expedicionario','Descubridor','Fundador','Rover Ciudadano']
+				pruebasdeadelantos =  ['PR','EP','DE','FU','RC']
+				insignia = ['PR','EP','DE','FU','RC']
+				listajoven=[]
+				for j in jovenes:
+					adelanto = j.adelanto
+					if adelanto != "Rover Ciudadano":
+						proximo = pruebasdeadelantos[adelantos.index(adelanto)]
+						totalpruebas =  Prueba.objects.filter(unidad='C',adelanto=proximo).count()
+						p = Prueba.objects.values_list("pk",flat=True).filter(adelanto=proximo)
+						aprobados = Logro.objects.filter(dnis=j.id,prueba__in = p).count()
+						if datetime.strptime(j.f_nac, '%d/%m/%Y')+ timedelta(days=21*365) < datetime.now():
+							if j.gen =='M':
+								proximo = 'Ah'
+							else:
+								proximo = 'Am'
+						else:
+							proximo = insignia[adelantos.index(adelanto)]
+						listajoven.append([j,adelanto,proximo,aprobados,totalpruebas])
+			listatotal.append([un,listajoven])
+			# elif x == "TM" or x == "TF" : 
+			# 	for j in jovenes:
+					
+			# elif x == "CM" or x == "CF" : 
+			# 	for j in jovenes:
+					
+		return render(request,'solicitaradelanto.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'lista':listatotal})
 	else:
 		return render(request, '404.html', {})

@@ -1,0 +1,182 @@
+{% extends 'main.html' %}
+
+    {% block title %} 
+    Especialidades
+    {% endblock %}
+ <script src="js/jquery.min.js"></script>
+
+{% block content %}
+      <!-- page content -->
+      <div class="right_col" role="main" style="background-image: url(/static/img/intro.jpg);background-repeat: no-repeat;">
+        <div class="">
+          <div class="page-title">
+            <div class="title_left">
+              <h3>
+                  {% if u == "Manada Masculina" or u == "Manada Femenina" %}
+                  <span class='label label-warning'>
+                  {% elif u == "Clan Masculino" or u == "Clan Femenino" %}
+                  <span class='label label-alert'>
+                  {% else %}
+                  <span class='label label-success'>
+                  {% endif %}
+                  Especialidades </span>
+                    
+                </h3>
+            </div>
+            <div class="title_right">
+                <div class="col-md-6 col-sm-6 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input style="color:white" id="myInput" type="search" onkeyup="return myFilter()" class="form-control" placeholder="Buscar joven...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Buscar</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="clearfix"></div>
+{%for u,listadeunidad in lista%}
+    <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><i class="fa fa-bars"></i> Especialidades de {{u}}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content" style="display:none">
+
+
+                    <div class="active" role="tabpanel" data-example-id="togglable-tabs">
+                      
+                      <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab{{forloop.counter}}1" aria-labelledby="home-tab">
+                       <div class="table-responsive">
+                        <table class="table-fill table table-striped jambo_table bulk_action">
+              <thead>
+              <tr class="headings">
+              <th style="width:10%" class="text-left">DNIS</th>
+              <th style="width:10%" class="text-left">Nombre</th>
+              <th style="width:10%" class="text-center">Adelanto</th>
+              <th style="width:60%" class="text-center">Logro</th>
+              <th style="width:10%" class="text-center">Próximo</th>
+              </tr>
+              </thead>
+              <tbody class="table-hover">
+              {% for j,adelanto,proximo,logros,pruebas in  listadeunidad%}
+                <tr id="rg{{forloop.counter}}">
+                <td class="text-center">{{j.id}}</td>
+                <td id="n{{forloop.counter}}" style="text-transform: uppercase" class="text-left">{{j.primer_nombre}} {{j.primer_apellido}}</td>
+                <td class="text-left eliminar"><img width="60%" src="/static/img/adelantos/{{j.adelanto}}.png"></td>
+                <td class="text-center" style="text-transform: uppercase">
+                <div class="progress" style="background:rgba(43, 226, 114, 0.23);border-radius:100px">
+                  <div class="progress-bar progress-bar-success" style="width:calc({{logros}}/{{pruebas}}*100%);border-radius:100px">{{logros}} / {{pruebas}}</div>
+                </div>
+                </td>
+                {%if logros == pruebas %}
+                <td class="text-left eliminar"><span><img width="60%" src="/static/img/adelantos/{{proximo}}.png">
+                  {%if not proximo == "LS" and not proximo == "SB" and not proximo == "RC" and not proximo == "T" and not proximo == "C" and not proximo == "Am" and not proximo == "Ah"%} 
+                  <a onclick="ade({{j.id}},'{{proximo}}')" href="#"> <i style="font-size:2em;color:#26B99A" class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></span>
+                  {%elif proximo == 'T' or proximo == 'C' or proximo == 'Am' or proximo == 'Ah' %}
+                  <a href="desvinculaciones"> <i style="font-size:2em;color:#26B99A" class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></span>
+                  {%else%}
+                  <a href="estadisticas-maximas"> <i style="font-size:2em;color:#26B99A" class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></span>
+                  
+                  {%endif%}
+                </td>
+                {%else%}
+                <td style="opacity:0.5" class="text-left eliminar"><span><img width="60%" src="/static/img/adelantos/{{proximo}}.png"></td>
+                {%endif%}
+              {% endfor %}
+              </tbody>
+              </table>
+                        </div>
+                        </div>
+
+                    </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+{% endfor %}
+
+
+      </div>
+      <!-- /page content -->
+
+  <!-- Datatables -->
+  <script src="js/datatables/js/jquery.dataTables.js"></script>
+  <script src="js/datatables/tools/js/dataTables.tableTools.js"></script>
+
+  <!-- pace -->
+  <script src="js/pace/pace.min.js"></script>
+
+<script>
+var $table = $('table.scroll'),
+    $bodyCells = $table.find('tbody tr:first').children(),
+    colWidth;
+
+// Adjust the width of thead cells when window resizes
+$(window).resize(function() {
+    // Get the tbody columns width array
+    colWidth = $bodyCells.map(function() {
+        return $(this).width();
+    }).get();
+    
+    // Set the width of thead columns
+    $table.find('thead tr').children().each(function(i, v) {
+        $(v).width(colWidth[i]);
+    });    
+}).resize(); // Trigger resize handler
+</script>
+
+
+<script>
+function ade(dnis,tipo){
+  $.ajax({data: {'dnis':dnis,'tipo':tipo},url: '/adelantar',type:'get',success: function(data){
+                if (data == 1) {
+                  new PNotify({
+                                  title: 'Cambio de adelanto procesado',
+                                  text: 'el adelanto del joven ha sido modificado',
+                                  type: 'success',
+                                  styling: 'bootstrap3'
+                              });
+                  window.location.reload();
+                } else {
+                  new PNotify({
+                                  title: 'Cambio de adelanto no procesado',
+                                  text: 'el adelanto del joven no ha sido modificado',
+                                  type: 'error',
+                                  styling: 'bootstrap3'
+                              });
+                }  
+            },});           
+}
+</script>
+
+<script>
+function myFilter() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    for (i = 1; i <= parseInt('{{pregnac|length}}'); i++) {
+        palabra = document.getElementById('n'+i);
+        console.log(palabra.innerHTML);
+        if (palabra.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            document.getElementById('rd'+i).style.display = "";
+            document.getElementById('rn'+i).style.display = "";
+            document.getElementById('rg'+i).style.display = "";
+        } else {
+            document.getElementById('rd'+i).style.display = "none";
+            document.getElementById('rn'+i).style.display = "none";
+            document.getElementById('rg'+i).style.display = "none";
+
+        }
+    }
+}
+</script>
+
+{% endblock %}
