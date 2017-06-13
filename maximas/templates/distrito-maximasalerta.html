@@ -1,0 +1,288 @@
+{% extends 'distrito-main.html' %}
+
+    {% block title %} 
+    Maximas Alertas
+    {% endblock %}
+ <script src="js/jquery.min.js"></script>
+
+{% block content %}
+      <!-- page content -->
+      <div class="right_col" role="main" style="background-image: url(/static/img/intro.jpg);background-repeat: no-repeat;">
+        <div class="">
+          <div class="page-title">
+            <div class="title_left">
+              <h3>
+              	  {% if u == "Manada Masculina" or u == "Manada Femenina" %}
+                  <span class='label label-warning'>
+                  {% elif u == "Clan Masculino" or u == "Clan Femenino" %}
+                  <span class='label label-alert'>
+                  {% else %}
+                  <span class='label label-success'>
+              	  {% endif %}
+              	  Alertas de Maximas Insignias </span>
+                    
+                </h3>
+            </div>
+            <div class="title_right">
+                <div class="col-md-6 col-sm-6 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input style="color:white" id="myInput" type="search" onkeyup="return myFilter()" class="form-control" placeholder="Buscar joven...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Buscar</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="clearfix"></div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><i class="fa fa-bars"></i> Proximas Maximas Insignias del Distrito</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content" >
+
+
+                     	<div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+	                     <div class="table-responsive">
+	                      <table class="table-fill table table-striped jambo_table bulk_action">
+				<thead>
+				<tr>
+				<th style="width:20px" class="text-left eliminar">GRUPO</th>
+				<th style="width:20px" class="text-left eliminar">DNIS</th>
+				<th style="width:20px" class="text-left eliminar">Edad</th>
+				<th class="text-left">Nombre</th>
+				<th style="width:10%" class="text-left eliminar">Adelanto</th>
+				<th style="width:10%" class="text-left eliminar">Fecha Nacim.</th>
+				<th style="width:10%" class="text-left eliminar">Tiempo restante </th>
+				<th class="text-left" colspan="2" >Especialidades <br>(2 Oro)</th>
+				<th class="text-left">CIP Grupal</th>
+				<th class="text-left">CIP Distrital</th>
+				<th class="text-left">CIP Regional/Nacional</th>
+				<th class="text-left">Solicitud</th>
+				</tr>
+				</thead>
+				<tbody class="table-hover">
+				{% for grupo,j,valor,edad,desvinculacion,esp1,esp2,g,d,r,n,estado in listajoven %}
+				{% if valor == 1 %}
+					<tr id="r{{forloop.counter}}" >
+					<td class="text-left eliminar"><strong>{{grupo}}</strong></th>
+					<td class="text-center eliminar">{{j.id}}</td>
+					<td class="text-center eliminar">{{edad|floatformat:0}}</td>
+					<td id="n{{forloop.counter}}" class="text-left" style="text-transform: uppercase"><strong>{{j.primer_nombre}}<br>  {{j.primer_apellido}}</strong></td>
+					<td class="text-left eliminar"><img width="90%" src="/static/img/adelantos/{{j.adelanto}}.png"></td>
+					<td class="text-left eliminar">{{j.f_nac}}</td>
+					<td class="text-left eliminar">{{desvinculacion}}</td>
+					{%if not esp1 == 0 %}
+					<td><span><img id="{{j.id}}-{{forloop.counter}}" style="width:40px;border:5px solid gold;border-radius:10px" src="/static/img/especialidades/{{esp1.tipo}}.png" alt="..." class="img-circle profile_img"></span> </td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not esp2 == 0 %}
+					<td><span><img id="{{j.id}}-{{forloop.counter}}" style="width:40px;border:5px solid gold;border-radius:10px" src="/static/img/especialidades/{{esp2.tipo}}.png" alt="..." class="img-circle profile_img"></span> </td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not g == 0%}
+					<td>{{g.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not d == 0%}
+					<td>{{d.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not n == 0%}
+					<td>{{n.evento}}</td>
+					{%else%}
+					{%if not r == 0%}
+					<td>{{r.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%endif%}
+					{%if estado %}
+					<td style="padding:0px;width:10%" colspan="12" class="text-left">
+						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:1" src="/static/img/adelantos/LS.png" alt="..." class="img-circle profile_img"></span>
+					</td>
+					{%else%}
+					<td style="padding:0px;width:10%" colspan="12" class="text-left">
+						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:0.5" src="/static/img/adelantos/LS.png" alt="..." class="img-circle profile_img"></span>
+					{%endif%}
+					</tr>
+				{% elif valor == 2 %}
+					<tr id="r{{forloop.counter}}" >
+					<td class="text-left eliminar"><strong>{{grupo}}</strong></th>
+					<td class="text-center eliminar">{{j.id}}</td>
+					<td class="text-center eliminar">{{edad|floatformat:0}}</td>
+					<td id="n{{forloop.counter}}" class="text-left" style="text-transform: uppercase"><strong>{{j.primer_nombre}}<br>  {{j.primer_apellido}}</strong></td>
+					<td class="text-left eliminar"><img width="90%" src="/static/img/adelantos/{{j.adelanto}}.png"></td>
+					<td class="text-left eliminar">{{j.f_nac}}</td>
+					<td class="text-left eliminar">{{desvinculacion}}</td>
+					{%if not esp1 == 0 %}
+					<td><span><img id="{{j.id}}-{{forloop.counter}}" style="width:40px;border:5px solid gold;border-radius:10px" src="/static/img/especialidades/{{esp1.tipo}}.png" alt="..." class="img-circle profile_img"></span> </td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not esp2 == 0 %}
+					<td><span><img id="{{j.id}}-{{forloop.counter}}" style="width:40px;border:5px solid gold;border-radius:10px" src="/static/img/especialidades/{{esp2.tipo}}.png" alt="..." class="img-circle profile_img"></span> </td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not g == 0%}
+					<td>{{g.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not d == 0%}
+					<td>{{d.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not n == 0%}
+					<td>{{n.evento}}</td>
+					{%else%}
+					{%if not r == 0%}
+					<td>{{r.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%endif%}
+					{%if estado %}
+					<td style="padding:0px;width:10%" colspan="12" class="text-left">
+						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:1" src="/static/img/adelantos/SB.png" alt="..." class="img-circle profile_img"></span>
+					</td>
+					{%else%}
+					<td style="padding:0px;width:10%" colspan="12" class="text-left">
+						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:0.5" src="/static/img/adelantos/SB.png" alt="..." class="img-circle profile_img"></span>
+					{%endif%}
+					</tr>
+				{% elif unidad == "CM" or unidad == "CF" %}
+					<tr id="r{{forloop.counter}}" >
+					<td class="text-left eliminar"><strong>{{grupo}}</strong></th>
+					<td class="text-center eliminar">{{j.id}}</td>
+					<td class="text-center eliminar">{{edad|floatformat:0}}</td>
+					<td id="n{{forloop.counter}}" class="text-left" style="text-transform: uppercase"><strong>{{j.primer_nombre}}<br>  {{j.primer_apellido}}</strong></td>
+					<td class="text-left eliminar"><img width="90%" src="/static/img/adelantos/{{j.adelanto}}.png"></td>
+					<td class="text-left eliminar">{{j.f_nac}}</td>
+					<td class="text-left eliminar">{{desvinculacion}}</td>
+					{%if not esp1 == 0 %}
+					<td><span><img id="{{j.id}}-{{forloop.counter}}" style="width:40px;border:5px solid gold;border-radius:10px" src="/static/img/especialidades/{{esp1.tipo}}.png" alt="..." class="img-circle profile_img"></span> </td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not esp2 == 0 %}
+					<td><span><img id="{{j.id}}-{{forloop.counter}}" style="width:40px;border:5px solid gold;border-radius:10px" src="/static/img/especialidades/{{esp2.tipo}}.png" alt="..." class="img-circle profile_img"></span> </td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not g == 0%}
+					<td>{{g.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not d == 0%}
+					<td>{{d.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%if not n == 0%}
+					<td>{{n.evento}}</td>
+					{%else%}
+					{%if not r == 0%}
+					<td>{{r.evento}}</td>
+					{%else%}
+					<td><span><i style="font-size:2em;color:red" class="fa fa-remove" aria-hidden="true"></i></span> </td>
+					{%endif%}
+					{%endif%}
+					{%if estado %}
+					<td style="padding:0px;width:10%" colspan="12" class="text-left">
+						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:1" src="/static/img/adelantos/RC.png" alt="..." class="img-circle profile_img"></span>
+					</td>
+					{%else%}
+					<td style="padding:0px;width:10%" colspan="12" class="text-left">
+						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:0.5" src="/static/img/adelantos/RC.png" alt="..." class="img-circle profile_img"></span>
+					{%endif%}
+					</tr>
+				{% endif %}
+				{% endfor %}
+				</tbody>
+				</table>
+	                      </div>
+                        </div>
+                    </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+      <!-- /page content -->
+
+  <!-- Datatables -->
+  <script src="js/datatables/js/jquery.dataTables.js"></script>
+  <script src="js/datatables/tools/js/dataTables.tableTools.js"></script>
+
+  <!-- pace -->
+  <script src="js/pace/pace.min.js"></script>
+
+<script>
+var $table = $('table.scroll'),
+    $bodyCells = $table.find('tbody tr:first').children(),
+    colWidth;
+
+// Adjust the width of thead cells when window resizes
+$(window).resize(function() {
+    // Get the tbody columns width array
+    colWidth = $bodyCells.map(function() {
+        return $(this).width();
+    }).get();
+    
+    // Set the width of thead columns
+    $table.find('thead tr').children().each(function(i, v) {
+        $(v).width(colWidth[i]);
+    });    
+}).resize(); // Trigger resize handler
+</script>
+
+<script>
+function myFilter() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    for (i = 1; i <= parseInt('{{jovenes|length}}'); i++) {
+        palabra = document.getElementById('n'+i);
+        console.log(palabra.innerHTML);
+        if (palabra.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            document.getElementById('r'+i).style.display = "";
+        } else {
+            document.getElementById('r'+i).style.display = "none";
+
+        }
+    }
+}
+</script>
+
+
+{% for j,valor,edad,desvinculacion,esp1,esp2,g,d,r,n,estado in lista %}
+	{%if estado %}
+	<script>
+	$(function(){
+	  new PNotify({
+	      title: 'Maxima Insignia',
+	      text: 'Los requisitos de maxima insignia de {{j.primer_nombre}} {{j.primer_apellido}} se encuentran listos para la solicitud',
+	      styling: 'bootstrap3'
+	  });
+	  });
+	</script>
+	{% endif %}
+{% endfor %}
+{% endblock %}

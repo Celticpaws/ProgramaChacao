@@ -11,15 +11,20 @@ admin.autodiscover()
 
 
 urlpatterns = [
+# Acceso
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.login, name='login'),
     url(r'^dnis$', views.dnis, name='dnis'),
     url(r'^dnis/(?P<dnis>[\w\-]+)/(?P<fecha>[\w\-]+)$', views.perfil, name='perfil'),
+    url(r'^logout$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    
+# AJAX
     url(r'^modificaradelanto$', views.modificaradelantoajax, name='modificaradelantoajax'),
     url(r'^desvinculando$', views.desvinculandoajax, name='desvinculando'),
     url(r'^adelantar$', views.adelantarajax, name='adelantar'),
     url(r'^modificarespecialidad$', views.modificarespecialidadajax, name='modificarespecialidadajax'),
     
+# Grupal
     url(r'^(?P<grupo>[\w\-]+)/adelantos/$', views.adelantos, name='adelantos'),
     url(r'^(?P<grupo>[\w\-]+)/condecoraciones$', views.condecoraciones, name='condecoraciones'),
     url(r'^(?P<grupo>[\w\-]+)/especialidades$', views.especialidades, name='especialidades'),
@@ -31,8 +36,19 @@ urlpatterns = [
     url(r'^(?P<grupo>[\w\-]+)/estadisticas-maximas$', views.maximasalerta, name='maximasalertas'),
     url(r'^(?P<grupo>[\w\-]+)/desvinculaciones$', views.desvinculaciones, name='desvinculaciones'),
     
-    url(r'^logout$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+# Distrital
+    url(r'^adelantos$', views.adelantosd, name='adelantosd'),
+    url(r'^condecoraciones$', views.condecoracionesd, name='condecoracionesd'),
+    url(r'^especialidades$', views.especialidadesd, name='especialidadesd'),
+    url(r'^cip$', views.cipd, name='cipd'),
+    url(r'^cursos$', views.cursosd, name='cursosd'),
+    url(r'^programasmundiales$', views.programasmundialesd, name='programasmundialesd'),
+    url(r'^metas$', views.cuadrosmetasd, name='metasd'),
+    url(r'^solicitaradelanto$', views.solicitaradelantod, name='solicitaradelantod'),
+    url(r'^estadisticas-maximas$', views.maximasalertad, name='maximasalertasd'),
+    url(r'^desvinculaciones$', views.desvinculacionesd, name='desvinculacionesd'),
 
+# Certificados
     url(r'^certificados/(?P<codigo>[\w\-]+)$', views.certificados),
     url(r'^certificado-mop/(?P<codigo>[\w\-]+)$', views.certificadomop),
     url(r'^certificado-psma/(?P<codigo>[\w\-]+)$', views.certificadopsma),

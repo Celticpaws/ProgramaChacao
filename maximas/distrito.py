@@ -27,9 +27,8 @@ import urllib
 import json
 import math
 import sys
-from .certificados import *
-from .ajax import *
-from .distrito import *
+
+from django.contrib.auth.decorators import permission_required
 
 def revisarpermisos(permisos):
 	u =  []
@@ -104,86 +103,14 @@ def undefineunidad(unidad):
 		return 'CM'
 
 
-def login(request, method='POST'):
-	form = RegisterForm()
-	if request.user.is_authenticated():
-		if request.user.is_staff :
-			return redirect("metas")
-		else:
-			g = Grupo.objects.get(usuario=request.user).grupo
-			return redirect(g+"/metas")
-	elif request.method == 'POST':
-		username = request.POST.get('username', '')
-		password = request.POST.get('password', '')
-		user = auth.authenticate(username=username, password=password)
-		if user is not None and user.is_active:
-			auth.login(request, user)
-			if request.user.is_staff :
-				return redirect("/metas")
-			else:
-				g = Grupo.objects.get(usuario=request.user).grupo
-				return redirect(g+"/metas")
-		else:
-			return render(request, "login.html", {})
-	else:
-		return render(request, "login.html", {})
-
-def dnis(request):
-	return render(request, "dnis.html", {})
-
-def perfil(request,dnis,fecha):
-	f = datetime.strptime(fecha,"%Y-%m-%d")
-	print(f)
-	print(dnis)
-	user = Joven.objects.get(pk=dnis)
-	unidad = undefineunidad(user.unidad)
-	grupo = undefinegrupo(user.grupo)
-	hoy = datetime.today()
-	try:
-		nacimiento = datetime.strptime(user.f_nac, '%d/%m/%Y')
-	except:
-		nacimiento = datetime.today()
-	try:
-		ingreso = datetime.strptime(user.f_promesa, '%d/%m/%Y')
-	except:
-		ingreso = datetime.today()
-	if unidad == "MM" or unidad =="MF":
-		egreso = nacimiento + timedelta(days=4012)
-	elif unidad == "TM" or unidad =="TF":
-		egreso = nacimiento + timedelta(days=5840)
-	elif unidad == "CM" or unidad =="CF":
-		egreso = nacimiento + timedelta(days=7665)
-	lleva= (hoy-ingreso)
-	quedan = (egreso-hoy)
-	vidaenmanada = egreso-ingreso
-	print(vidaenmanada.days)
-	print(lleva.days)
-	if vidaenmanada.days < 0 :
-		vidaenunidad = 100
-	else:
-		vidaenunidad = (float(lleva.days)/float(vidaenmanada.days)*100)
-		print(vidaenunidad)
-	e = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
-	esp = []
-	adelantos = Adelanto.objects.filter(usuario=dnis).order_by('-fecha_entrega')			
-	especialidades = Especialidades.objects.filter(dnis=dnis)
-	for es in especialidades:
-		esp.append([es,e[es.tipo]])
-	print(especialidades)
-	return render(request, "perfil.html", {'vidaenunidad':vidaenunidad,'adelantos':adelantos,'especialidades':esp,'user':user,'unidad':unidad,'grupo':grupo})
-
- 
-
-
-@login_required(login_url ='/')
-def cuadrosmetas(request,grupo):
-	g =  definegrupo(grupo)
+@permission_required('is_staff',login_url ='/')
+def cuadrosmetasd(request):
+	u = ['MM','MF','TM','TF','CM','CF']
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
-	u = revisarpermisos(permisos)
+	grupos = ['PLEYADES','RORAIMA','TIUNA','SANTO TOMAS DE AQUINO','DON BOSCO','CATATUMBO']
 	unidades = []
-	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
-	gr = definegrupo(grupo)
-	if (gru == g):
+	jovenesdistrito = []
+	for gr in grupos: 
 		jovenestotal = []
 		jovenesto = []
 		for x in u:
@@ -325,13 +252,12 @@ def cuadrosmetas(request,grupo):
 					fechas.append([nacimiento,egreso])
 				adelantos.append(fec)
 			jovenestotal.append([zip(jovenes,edades,porcentajes,fechas,adelantos),x,un])
-		return render(request, 'cuadrometas.html', 
-			{'fotoperfil':permisos.imagen,'unidades':zip(unidades,u),'jovenestotal':jovenestotal,'gru':grupo,'g':gr,'hoy':hoy,'futuro':futuro,'g':grupo})
-	else:
-		return render(request, '404.html', {})
-
+		jovenesdistrito.append([gr,jovenestotal])
+	return render(request, 'distrito-cuadrometas.html', 
+			{'fotoperfil':permisos.imagen,'unidades':zip(unidades,u),'jovenesdistrito':jovenesdistrito,'hoy':hoy,'futuro':futuro})
+	
 @login_required(login_url ='/')
-def cip(request,grupo):
+def cipd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -415,7 +341,7 @@ def cip(request,grupo):
 		return render(request, '404.html', {})
 
 @login_required(login_url ='/')
-def condecoraciones(request,grupo):
+def condecoracionesd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -491,7 +417,7 @@ def condecoraciones(request,grupo):
 
 
 @login_required(login_url ='/')
-def adelantos(request,grupo):
+def adelantosd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -606,7 +532,7 @@ def adelantos(request,grupo):
 		return render(request, '404.html', {})
 
 @login_required(login_url ='/')
-def cursos(request,grupo):
+def cursosd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -645,7 +571,7 @@ def cursos(request,grupo):
 		return render(request, '404.html', {})
 
 @login_required(login_url ='/')
-def programasmundiales(request,grupo):
+def programasmundialesd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -682,7 +608,7 @@ def programasmundiales(request,grupo):
 		return render(request, '404.html', {})
 
 @login_required(login_url ='/')
-def especialidades(request,grupo):
+def especialidadesd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -716,25 +642,31 @@ def especialidades(request,grupo):
 		return render(request, '404.html', {})
 
 
-def maximasalerta(request,grupo):
-	g =  definegrupo(grupo)
+@permission_required('is_staff',login_url ='/')
+def maximasalertad(request):
+	u = ['MM','MF','TM','TF','CM','CF']
+	permisos = PermisoUnidad.objects.get(usuario=request.user)
+	grupos = ['PLEYADES','RORAIMA','TIUNA','SANTO TOMAS DE AQUINO','DON BOSCO','CATATUMBO']
+	unidades = []
+	jovenesdistrito = []
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
 	unidades = []
 	cursostotal = []
-	gru = definegrupo(Grupo.objects.get(usuario=request.user).grupo)
-	gr = definegrupo(grupo)
-	listaunidad = []
-	if (gru == g):
+	listajoven = []
+	for gr in grupos:
 		hoy = datetime.today()
-		listajoven = []
 		for x in u:
 			un = defineunidad(x)
 			unidades.append(defineunidad(x)) 
 			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
+
 			if x == "MM" or x == "MF" :
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					try: 
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
 					desvinculacion = nacimiento +timedelta(days=11*365) 
 					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
 						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
@@ -769,10 +701,18 @@ def maximasalerta(request,grupo):
 							n = 0
 						edad = (hoy - nacimiento).days/365
 						estado = (esp1!=0 and esp2!=0 and g!=0 and d !=0 and (r!=0 or n!=0))
-						listajoven.append([j,1,edad,desvinculacion-hoy,esp1,esp2,g,d,r,n,estado])
+						desvin = (desvinculacion-hoy).days/30
+						if desvin < 1:
+							des = str((desvinculacion-hoy).days)+" días"
+						else:
+							des = str(desvin)+" meses"
+						listajoven.append([gr,j,1,edad,des,esp1,esp2,g,d,r,n,estado])
 			elif x == "TM" or x == "TF" : 
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					try: 
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
 					desvinculacion = nacimiento +timedelta(days=16*365) 
 					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
 						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
@@ -807,10 +747,18 @@ def maximasalerta(request,grupo):
 							n = 0
 						edad = (hoy - nacimiento).days/365
 						estado = (esp1!=0 and esp2!=0 and g!=0 and d !=0 and (r!=0 or n!=0))
-						listajoven.append([j,2,edad,desvinculacion-hoy,esp1,esp2,g,d,r,n,estado])
+						desvin = (desvinculacion-hoy).days/30
+						if desvin < 1:
+							des = str((desvinculacion-hoy).days)+" días"
+						else:
+							des = str(desvin)+" meses"
+						listajoven.append([gr,j,2,edad,des,esp1,esp2,g,d,r,n,estado])
 			elif x == "CM" or x == "CF" : 
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					try: 
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
 					desvinculacion = nacimiento +timedelta(days=21*365) 
 					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
 						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
@@ -845,13 +793,17 @@ def maximasalerta(request,grupo):
 							n = 0
 						edad = (hoy - nacimiento).days/365
 						estado = (esp1!=0 and esp2!=0 and g!=0 and d !=0 and (r!=0 or n!=0))
-						listajoven.append([j,3,edad,desvinculacion-hoy,esp1,esp2,g,d,r,n,estado])
+						desvin = (desvinculacion-hoy).days/30
+						if desvin < 1:
+							des = str((desvinculacion-hoy).days)+" días"
+						else:
+							des = str(desvin)+" meses"
+						listajoven.append([gr,j,3,edad,des,esp1,esp2,g,d,r,n,estado])
+	print(listajoven)
+	return render(request,'distrito-maximasalerta.html',{'fotoperfil':permisos.imagen,'listajoven':listajoven})
+	
 
-		return render(request,'maximasalerta.html',{'fotoperfil':permisos.imagen,'gru':grupo,'g':gr,'lista':listajoven})
-	else:
-		return render(request, '404.html', {})
-
-def desvinculaciones(request,grupo):
+def desvinculacionesd(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
@@ -893,7 +845,7 @@ def desvinculaciones(request,grupo):
 		return render(request, '404.html', {})
 
 
-def solicitaradelanto(request,grupo):
+def solicitaradelantod(request,grupo):
 	g =  definegrupo(grupo)
 	permisos = PermisoUnidad.objects.get(usuario=request.user)
 	u = revisarpermisos(permisos)
