@@ -164,53 +164,55 @@ def perfil(request,dnis,fecha):
 	print(f)
 	print(dnis)
 	user = Joven.objects.get(pk=dnis)
-	unidad = undefineunidad(user.unidad)
-	grupo = undefinegrupo(user.grupo)
-	hoy = datetime.today()
-	try:
-		nacimiento = datetime.strptime(user.f_nac, '%d/%m/%Y')
-	except:
-		nacimiento = datetime.today()
-	try:
-		ingreso = datetime.strptime(user.f_promesa, '%d/%m/%Y')
-	except:
-		ingreso = datetime.today()
-	if unidad == "MM" or unidad =="MF":
-		egreso = nacimiento + timedelta(days=4012)
-	elif unidad == "TM" or unidad =="TF":
-		egreso = nacimiento + timedelta(days=5840)
-	elif unidad == "CM" or unidad =="CF":
-		egreso = nacimiento + timedelta(days=7665)
-	lleva= (hoy-ingreso)
-	quedan = (egreso-hoy)
-	vidaenmanada = egreso-ingreso
-	print(vidaenmanada.days)
-	print(lleva.days)
-	if vidaenmanada.days < 0 :
-		vidaenunidad = 100
+	if user.f_nac == f.strftime("%d/%m/%Y") :
+		unidad = undefineunidad(user.unidad)
+		grupo = undefinegrupo(user.grupo)
+		hoy = datetime.today()
+		try:
+			nacimiento = datetime.strptime(user.f_nac, '%d/%m/%Y')
+		except:
+			nacimiento = datetime.today()
+		try:
+			ingreso = datetime.strptime(user.f_promesa, '%d/%m/%Y')
+		except:
+			ingreso = datetime.today()
+		if unidad == "MM" or unidad =="MF":
+			egreso = nacimiento + timedelta(days=4012)
+		elif unidad == "TM" or unidad =="TF":
+			egreso = nacimiento + timedelta(days=5840)
+		elif unidad == "CM" or unidad =="CF":
+			egreso = nacimiento + timedelta(days=7665)
+		lleva= (hoy-ingreso)
+		quedan = (egreso-hoy)
+		vidaenmanada = egreso-ingreso
+		print(vidaenmanada.days)
+		print(lleva.days)
+		if vidaenmanada.days < 0 :
+			vidaenunidad = 100
+		else:
+			vidaenunidad = (float(lleva.days)/float(vidaenmanada.days)*100)
+			print(vidaenunidad)
+		e = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
+		esp = []
+		con = []
+		adelantos = Adelanto.objects.filter(usuario=dnis).order_by('-fecha_entrega')			
+		especialidades = Especialidades.objects.filter(dnis=dnis)
+		condecoraciones = Condecoraciones.objects.filter(dnis=dnis)
+		for es in especialidades:
+			esp.append([es,e[es.tipo]])
+		for co in condecoraciones:
+			con.append([co,definecondecoracion(co.condecoracion)])
+		cip = ParticipanteCIP.objects.filter(dnis=dnis)
+		cursos = ParticipanteCursos.objects.filter(dnis=dnis)
+		programasmundiales = ParticipanteProgramasMundiales.objects.filter(dnis=dnis)
+		pr = []
+		for p in programasmundiales:
+			pr.append([p,defineprogramamundial(p.evento,unidad)])
+		print(especialidades)
+		return render(request, "perfil.html", {'vidaenunidad':vidaenunidad,'adelantos':adelantos,'condecoraciones':con,'cursos':cursos,'programasmundiales':pr,
+			'especialidades':esp,'cip':cip,'user':user,'unidad':unidad,'grupo':grupo})
 	else:
-		vidaenunidad = (float(lleva.days)/float(vidaenmanada.days)*100)
-		print(vidaenunidad)
-	e = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
-	esp = []
-	con = []
-	adelantos = Adelanto.objects.filter(usuario=dnis).order_by('-fecha_entrega')			
-	especialidades = Especialidades.objects.filter(dnis=dnis)
-	condecoraciones = Condecoraciones.objects.filter(dnis=dnis)
-	for es in especialidades:
-		esp.append([es,e[es.tipo]])
-	for co in condecoraciones:
-		con.append([co,definecondecoracion(co.condecoracion)])
-	cip = ParticipanteCIP.objects.filter(dnis=dnis)
-	cursos = ParticipanteCursos.objects.filter(dnis=dnis)
-	programasmundiales = ParticipanteProgramasMundiales.objects.filter(dnis=dnis)
-	pr = []
-	for p in programasmundiales:
-		pr.append([p,defineprogramamundial(p.evento,unidad)])
-	print(especialidades)
-	return render(request, "perfil.html", {'vidaenunidad':vidaenunidad,'adelantos':adelantos,'condecoraciones':con,'cursos':cursos,'programasmundiales':pr,
-		'especialidades':esp,'cip':cip,'user':user,'unidad':unidad,'grupo':grupo})
-
+		return render(request, '404.html', {})
  
 
 
