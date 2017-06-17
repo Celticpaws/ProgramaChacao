@@ -61,6 +61,34 @@ def definegrupo(g):
 	if g == "CAT":
 		return "CATATUMBO"
 
+def definecondecoracion(g):
+	if g == "NPB":
+		return "Nudo de Perseverancia en Bronce"
+	if g == "NPP":
+		return "Nudo de Perseverancia en Plata"
+	if g == "NPO":
+		return "Nudo de Perseverancia en Oro"
+	if g == "BESP":
+		return "Barra de Espíritud Scout en Plata"
+	if g == "BESO":
+		return "Barra de Espíritud Scout en Oro"
+	if g == "BV":
+		return "Barra Vinotinto"
+	if g == "OM1":
+		return "Orden al Merito Primera CLase"
+	if g == "OM2":
+		return "Orden al Mèrito Segunda Clase"
+	if g == "MSJ":
+		return "Medalla de San Jorge"
+
+def defineprogramamundial(g,u):
+	if g == "Programa Mensajeros de Paz":
+		return "MOP"
+	if g == "Programa Scout Mundial del Ambiente":
+		return "PSMA-"+u[0]
+	if g == "Programa Scouts del Mundo":
+		return "SOWA"
+
 def undefinegrupo(g):
 	if g == "SANTO TOMAS DE AQUINO":
 		return "STA"
@@ -165,12 +193,23 @@ def perfil(request,dnis,fecha):
 		print(vidaenunidad)
 	e = ['Artes y Hobbies','Identidad Nacional','Cultura Física','Ciencia y Tecnología','Servicio','Preparación para el Trabajo','Vida al Aire Libre','Habilidades y Destrezas']	
 	esp = []
+	con = []
 	adelantos = Adelanto.objects.filter(usuario=dnis).order_by('-fecha_entrega')			
 	especialidades = Especialidades.objects.filter(dnis=dnis)
+	condecoraciones = Condecoraciones.objects.filter(dnis=dnis)
 	for es in especialidades:
 		esp.append([es,e[es.tipo]])
+	for co in condecoraciones:
+		con.append([co,definecondecoracion(co.condecoracion)])
+	cip = ParticipanteCIP.objects.filter(dnis=dnis)
+	cursos = ParticipanteCursos.objects.filter(dnis=dnis)
+	programasmundiales = ParticipanteProgramasMundiales.objects.filter(dnis=dnis)
+	pr = []
+	for p in programasmundiales:
+		pr.append([p,defineprogramamundial(p.evento,unidad)])
 	print(especialidades)
-	return render(request, "perfil.html", {'vidaenunidad':vidaenunidad,'adelantos':adelantos,'especialidades':esp,'user':user,'unidad':unidad,'grupo':grupo})
+	return render(request, "perfil.html", {'vidaenunidad':vidaenunidad,'adelantos':adelantos,'condecoraciones':con,'cursos':cursos,'programasmundiales':pr,
+		'especialidades':esp,'cip':cip,'user':user,'unidad':unidad,'grupo':grupo})
 
  
 

@@ -200,12 +200,14 @@
                             </li>
                             <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Especialidades</a>
                             </li>
-                            <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">CIP</a>
+                            <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Condecoraciones</a>
                             </li>
-                            <li role="presentation" class=""><a href="#tab_content4" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Programas Mundiales</a>
+                            <li role="presentation" class=""><a href="#tab_content4" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">CIP</a>
+                            </li>
+                            <li role="presentation" class=""><a href="#tab_content5" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Programas Mundiales</a>
                             </li>
                             {%if not unidad == 'MM' and not unidad == 'MF'%}
-                            <li role="presentation" class=""><a href="#tab_content5" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Cursos</a>
+                            <li role="presentation" class=""><a href="#tab_content6" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Cursos</a>
                             </li>
                             {%endif%}
                           </ul>
@@ -267,10 +269,79 @@
                            <!-- end user projects -->
 
                           </div>
+
+
                           <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
-                            <p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui
-                              photo booth letterpress, commodo enim craft beer mlkshk </p>
+                            {%for e in condecoraciones%}
+                        
+                        <div class="col-md-3 col-xs-12 widget widget_tally_box">
+                          
+                          <div class="x_panel">
+                            <div class="x_content">
+                              <img src="/static/img/condecoraciones/{{e.0.condecoracion}}.png" alt="..." style="border-radius:0" class="img-circle profile_img">
+                              <h3>{{e.1}}</h3>
+                              <h5> {{e.0.fecha_entrega|date:"d-m-Y"}}</h5>
+                              
+                            </div>
                           </div>
+                        </div>
+                  
+                    {%endfor%}
+                          </div>
+
+                          <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="profile-tab">
+                            {%for e in cip%}
+                        
+                        <div class="col-md-3 col-xs-12 widget widget_tally_box">
+                          
+                          <div class="x_panel">
+                            <div class="x_content">
+                              <img src="/static/img/cip/{{e.nombre}}.png" alt="..." style="border-radius:0" class="img-circle profile_img">
+                              <h3>{{e.evento}}</h3>
+                              
+                            </div>
+                          </div>
+                        </div>
+                  
+                    {%endfor%}
+                          </div>
+
+                          <div role="tabpanel" class="tab-pane fade" id="tab_content5" aria-labelledby="profile-tab">
+                            {%for e in programasmundiales%}
+                        
+                        <div class="col-md-3 col-xs-12 widget widget_tally_box">
+                          
+                          <div class="x_panel">
+                            <div class="x_content">
+                              <img src="/static/img/programasmundiales/{{e.1}}.png" alt="..." style="border-radius:0" class="img-circle profile_img">
+                              <h3>{{e.0.evento}}</h3>
+                              <h5> {{e.0.fecha|date:"d-m-Y"}}</h5>
+                            </div>
+                          </div>
+                        </div>
+                  
+                    {%endfor%}
+                          </div>
+
+                          <div role="tabpanel" class="tab-pane fade" id="tab_content6" aria-labelledby="profile-tab">
+                            {%for e in cursos%}
+                        
+                        <div class="col-md-3 col-xs-12 widget widget_tally_box">
+                          
+                          <div class="x_panel">
+                            <div class="x_content">
+                              <img src="/static/img/cursos/{{e.evento}}.png" alt="..." style="border-radius:0" class="img-circle profile_img">
+                              <h3>{{e.evento}}</h3>
+                              
+                            </div>
+                          </div>
+                        </div>
+                  
+                    {%endfor%}
+                          </div>
+
+
+
                         </div>
                       </div>
                     </div>
