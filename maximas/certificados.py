@@ -64,7 +64,7 @@ def certificadomop(request,codigo):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = "filename='"+evento.codigo+"-"+participante.numero+".pdf'"
     
-    logo = ImageReader("/home/cfarinha/Dropbox/ProgramaChacao/maximas/static/certificados/mop-"+str(participante.fecha.year)+".jpg")
+    logo = ImageReader("/home/programachacao/ProgramaChacao/static/certificados/mop-"+str(participante.fecha.year)+".jpg")
     
     p = canvas.Canvas(response)
     p.setPageSize((594, 792))
@@ -93,7 +93,7 @@ def certificadopsma(request,codigo):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = "filename='"+evento.codigo+"-"+participante.numero+".pdf'"
     
-    logo = ImageReader("/home/cfarinha/Dropbox/ProgramaChacao/maximas/static/certificados/psma-"+joven.unidad[0]+"-"+str(participante.fecha.year)+".jpg")
+    logo = ImageReader("/home/programachacao/ProgramaChacao/static/certificados/psma-"+joven.unidad[0]+"-"+str(participante.fecha.year)+".jpg")
     
     p = canvas.Canvas(response)
     p.setPageSize((594, 792))
