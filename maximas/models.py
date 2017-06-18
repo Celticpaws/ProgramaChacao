@@ -71,7 +71,7 @@ class Grupo(models.Model):
 	usuario = models.ForeignKey('auth.User')
 
 	def __str__(self):
-		return str(self.grupo)
+		return str(self.grupo)+" "+str(self.usuario)
 
 
 class Evento (models.Model):

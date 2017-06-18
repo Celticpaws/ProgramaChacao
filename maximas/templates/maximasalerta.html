@@ -161,7 +161,7 @@
 						<span><img id="{{j.id}}-{{forloop.counter}}" style="width:90%;opacity:0.5" src="/static/img/adelantos/SB.png" alt="..." class="img-circle profile_img"></span>
 					{%endif%}
 					</tr>
-				{% elif unidad == "CM" or unidad == "CF" %}
+				{% else %}
 					<tr id="r{{forloop.counter}}" >
 					<td class="text-center eliminar">{{j.id}}</td>
 					<td class="text-center eliminar">{{edad|floatformat:0}}</td>

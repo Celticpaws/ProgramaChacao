@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^$', views.login, name='login'),
     url(r'^dnis$', views.dnis, name='dnis'),
     url(r'^dnis/(?P<dnis>[\w\-]+)/(?P<fecha>[\w\-]+)$', views.perfil, name='perfil'),
+    url(r'^cambiarcontrasena$', views.cambiarcontraajax),
     url(r'^logout$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     
 # AJAX

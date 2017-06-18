@@ -175,16 +175,8 @@
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                  <li><a href="javascript:;">  Profile</a>
-                  </li>
                   <li>
-                    <a href="javascript:;">
-                      <span class="badge bg-red pull-right">50%</span>
-                      <span>Settings</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="javascript:;">Help</a>
+                    <a onclick="document.getElementById('modalcontra').style.display='block'"><i class="fa fa-lock pull-right"></i>Cambiar contraseña</a>
                   </li>
                   <li><a href="/logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                   </li>
@@ -253,7 +245,30 @@
       </div>
       <!-- /top navigation -->
 
+ <div id="modalcontra" class="modal fade bs-example-modal-sm in" tabindex="-1" role="dialog" aria-hidden="true" style="display: none; padding-right: 15px;">
+                    <div class="modal-dialog modal-sm">
+                      <div class="modal-content">
 
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                          </button>
+                          <h4 style="color:rgb(49, 16, 80)" id="myModalLabel2">Cambio de contraseña</h4>
+                        </div>
+                        <div class="modal-body">
+                          <h4 style="color:rgb(49, 16, 80)">{{request.user}}</h4>
+                          <p>Nueva contraseña</p>
+                          <input id="password" class="form-control col-md-7 col-xs-12" type="password">
+                          <p>Repita la contraseña</p>
+                          <input id="confirmar" class="form-control col-md-7 col-xs-12" type="password"> 
+                        </div>
+                        <div class="modal-footer">
+                          <button onclick="document.getElementById('modalcontra').style.display='none'" type="button" class="btn btn-default" >Cancelar</button>
+                          <button onclick="cambiar({{user.pk}})" type="button" class="btn btn-primary">Cambiar</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
       <!-- page content -->
       {% block content %}
       {% endblock %}
@@ -707,7 +722,25 @@
       ele.classList.add("tropa");
     }
   }
-</script>
+function cambiar(user) {
+      password = document.getElementById("password").value;
+      ver = document.getElementById("confirmar").value;
+      if (ver == password){
+        $.ajax({data: {'user':user,'password':password},url: '/cambiarcontrasena',type:'get',success: function(data){
+            if (data == 0){   
+              alert("Fallo al realizar el cambio");  
+            }else if (data == 1){
+              document.getElementById("modalcontra").style.display="none";
+              alert("Cambio de contraseña realizado");
+            }else if (data==2){
+             alert("Usted no esta autorizado para hacer este cambio");
+            }
+            },});
+      }else{
+         alert("Las contraseñas no son iguales");
+      }  
+  }
+  </script>
 </body>
 
 </html>

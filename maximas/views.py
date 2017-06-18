@@ -156,6 +156,21 @@ def login(request, method='POST'):
 	else:
 		return render(request, "login.html", {})
 
+@login_required(login_url ='/')
+def cambiarcontraajax(request):
+	u = int(request.GET['user'])
+	try:
+		if (request.user.pk == u) :
+			user = User.objects.get(pk=u)
+			user.set_password(request.GET['password'])
+			user.save()
+			resultado = 1
+		else:
+			resultado = 2
+	except:
+		resultado = 0
+	return HttpResponse(json.dumps(resultado),content_type='application/json')
+
 def dnis(request):
 	return render(request, "dnis.html", {})
 
@@ -775,7 +790,10 @@ def maximasalerta(request,grupo):
 			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
 			if x == "MM" or x == "MF" :
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					try:
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
 					desvinculacion = nacimiento +timedelta(days=11*365) 
 					if desvinculacion-timedelta(days=365/2) < hoy and desvinculacion > hoy:
 						especialidades = Especialidades.objects.filter(dnis=j.id,nivel=3)
@@ -910,22 +928,31 @@ def desvinculaciones(request,grupo):
 			jovenes = Joven.objects.filter(grupo=gr,unidad=un)
 			if x == "MM" or x == "MF" :
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
-					desvinculacion = datetime.strptime(j.f_nac, '%d/%m/%Y')+timedelta(days=11*365) 
+					try:
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
+					desvinculacion = nacimiento+timedelta(days=11*365) 
 					edad = (hoy - nacimiento).days/365 
 					if desvinculacion < hoy :
 						listajoven.append([j,1,edad,hoy-desvinculacion,j.gen])
 			elif x == "TM" or x == "TF" : 
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
-					desvinculacion = datetime.strptime(j.f_nac, '%d/%m/%Y')+timedelta(days=16*365) 
+					try:
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
+					desvinculacion = nacimiento+timedelta(days=16*365) 
 					edad = (hoy - nacimiento).days/365 
 					if desvinculacion < hoy :
 						listajoven.append([j,2,edad,hoy-desvinculacion,j.gen])
 			elif x == "CM" or x == "CF" : 
 				for j in jovenes:
-					nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
-					desvinculacion = datetime.strptime(j.f_nac, '%d/%m/%Y')+timedelta(days=21*365)
+					try:
+						nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+					except:
+						nacimiento = datetime.today()
+					desvinculacion = nacimiento+timedelta(days=21*365)
 					edad = (hoy - nacimiento).days/365 
 					if desvinculacion < hoy: 
 						listajoven.append([j,3,edad,hoy-desvinculacion,j.gen])
@@ -963,7 +990,11 @@ def solicitaradelanto(request,grupo):
 						totalpruebas =  Prueba.objects.filter(unidad='M',adelanto=proximo).count()
 						p = Prueba.objects.values_list("pk",flat=True).filter(adelanto=proximo)
 						aprobados = Logro.objects.filter(dnis=j.id,prueba__in = p).count()
-						if datetime.strptime(j.f_nac, '%d/%m/%Y')+ timedelta(days=11*365) < datetime.now():
+						try:
+							nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+						except:
+							nacimiento = datetime.today()
+						if nacimiento + timedelta(days=11*365) < datetime.now():
 							proximo = 'T'
 						else:
 							proximo = insignia[adelantos.index(adelanto)]
@@ -980,7 +1011,11 @@ def solicitaradelanto(request,grupo):
 						totalpruebas =  Prueba.objects.filter(unidad='T',adelanto=proximo).count()
 						p = Prueba.objects.values_list("pk",flat=True).filter(adelanto=proximo)
 						aprobados = Logro.objects.filter(dnis=j.id,prueba__in = p).count()
-						if datetime.strptime(j.f_nac, '%d/%m/%Y')+ timedelta(days=16*365) < datetime.now():
+						try:
+							nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+						except:
+							nacimiento = datetime.today()
+						if nacimiento+ timedelta(days=16*365) < datetime.now():
 							proximo = 'C'
 						else:
 							proximo = insignia[adelantos.index(adelanto)]
@@ -997,7 +1032,12 @@ def solicitaradelanto(request,grupo):
 						totalpruebas =  Prueba.objects.filter(unidad='C',adelanto=proximo).count()
 						p = Prueba.objects.values_list("pk",flat=True).filter(adelanto=proximo)
 						aprobados = Logro.objects.filter(dnis=j.id,prueba__in = p).count()
-						if datetime.strptime(j.f_nac, '%d/%m/%Y')+ timedelta(days=21*365) < datetime.now():
+						try:
+							nacimiento = datetime.strptime(j.f_nac, '%d/%m/%Y')
+						except:
+							nacimiento = datetime.today()
+						
+						if nacimiento+ timedelta(days=21*365) < datetime.now():
 							if j.gen =='M':
 								proximo = 'Ah'
 							else:
